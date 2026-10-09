@@ -24,7 +24,7 @@ lead: "A signed public scorecard of the remote servers in the MCP Registry, each
 ---
 
 ```sh
-go install satellion.com/passmcp-registry/cmd/passmcp-registry@v0.0.4
+go install satellion.com/passmcp-registry/cmd/passmcp-registry@v0.0.5
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-registry](https://github.com/sebastienrousseau/passmcp-registry)

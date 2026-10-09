@@ -24,7 +24,7 @@ lead: "A language server for MCP artefacts, with check-id hover from passmcp's g
 ---
 
 ```sh
-go install satellion.com/passmcp-lsp/cmd/passmcp-lsp@v0.0.4
+go install satellion.com/passmcp-lsp/cmd/passmcp-lsp@v0.0.5
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-lsp](https://github.com/sebastienrousseau/passmcp-lsp)

@@ -24,7 +24,7 @@ lead: "The published MCP reliability census: the dataset, the methodology, the d
 ---
 
 ```sh
-go install satellion.com/passmcp-census/cmd/passmcp-census@v0.0.4
+go install satellion.com/passmcp-census/cmd/passmcp-census@v0.0.5
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-census](https://github.com/sebastienrousseau/passmcp-census)

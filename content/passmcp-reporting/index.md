@@ -24,7 +24,7 @@ lead: "The attestation a passmcp run makes about an MCP server, and the verifier
 ---
 
 ```sh
-go get satellion.com/passmcp-reporting@v0.0.4
+go get satellion.com/passmcp-reporting@v0.0.5
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-reporting](https://github.com/sebastienrousseau/passmcp-reporting)

@@ -19,22 +19,22 @@ QUALITY = "quality-gate-report.json"
 ACCESSIBILITY = "accessibility-report.json"
 
 
+def _is_real_issue(issue):
+    if "SRI mismatch for /" in issue:
+        parts = issue.split("SRI mismatch for /")
+        if len(parts) == 2 and (Path("dist") / parts[1].strip()).is_file():
+            return False
+    return True
+
+
 def quality_problems(report):
     """What the quality gate report says is wrong, one line each."""
     out = []
     issues_by_pillar = {}
     for name, pillar in sorted(report["pillars"].items()):
-        real_issues = []
-        for issue in pillar["issues"]:
-            if "SRI mismatch for /" in issue:
-                parts = issue.split("SRI mismatch for /")
-                if len(parts) == 2:
-                    asset_name = parts[1].strip()
-                    if (Path("dist") / asset_name).is_file():
-                        continue
-            real_issues.append(f"quality gate: {name}: {issue}")
-        if real_issues:
-            issues_by_pillar[name] = real_issues
+        real = [f"quality gate: {name}: {i}" for i in pillar["issues"] if _is_real_issue(i)]
+        if real:
+            issues_by_pillar[name] = real
 
     total = report.get("total_pillars", len(report["pillars"]))
     passed = total - len(issues_by_pillar)

@@ -7,6 +7,15 @@ All notable changes to satellion.com are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions move by
 0.0.1 a release, as across the passmcp family.
 
+## [0.0.5] — 2026-10-09
+
+### Changed
+
+- **Built against passmcp 0.0.5.** The numbers, sample report and family
+  table come from the 0.0.5 release.
+- **Upgraded static engine to SSG 0.0.66.** Quality gate supports
+  root-relative SRI verification.
+
 ## [0.0.4] — 2026-09-30
 
 ### Added
