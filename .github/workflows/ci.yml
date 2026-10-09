@@ -75,7 +75,7 @@ jobs:
       # The Makefile refuses any other version, so the floor is enforced
       # where it is stated.
       - name: Install SSG
-        run: cargo install ssg --locked --version 0.0.63
+        run: cargo install ssg --locked --version 0.0.66
 
       - name: The pages that need no passmcp release build
         run: make core

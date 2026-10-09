@@ -24,7 +24,7 @@ lead: "passmcp as MCP tools, so an agent can evaluate a server, or check an atte
 ---
 
 ```sh
-go install satellion.com/passmcp-server/cmd/passmcp-server@v0.0.4
+go install satellion.com/passmcp-server/cmd/passmcp-server@v0.0.5
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-server](https://github.com/sebastienrousseau/passmcp-server)

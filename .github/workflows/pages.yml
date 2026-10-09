@@ -62,7 +62,7 @@ jobs:
         run: make test
 
       - name: Install SSG
-        run: cargo install ssg --locked --version 0.0.63
+        run: cargo install ssg --locked --version 0.0.66
 
       # The full site needs a passmcp release; until the first exists, the
       # core pages deploy alone, because Go needs the module pages to fetch

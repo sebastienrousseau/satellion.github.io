@@ -93,7 +93,7 @@ make serve    # then open http://localhost:8000
 
 ## The satellion.com ecosystem
 
-Every component is released at **0.0.4** and moves in lockstep: one version across the family, released together ([docs/ecosystem.md](https://github.com/sebastienrousseau/passmcp/blob/main/docs/ecosystem.md)).
+Every component is released at **0.0.5** and moves in lockstep: one version across the family, released together ([docs/ecosystem.md](https://github.com/sebastienrousseau/passmcp/blob/main/docs/ecosystem.md)).
 
 | Component | Purpose | Use case |
 | :--- | :--- | :--- |
@@ -171,7 +171,7 @@ Not applicable: the site is static. passmcp's benchmarks are in its
 ## Examples
 
 ```sh
-make site PASSMCP_REF=v0.0.4   # build against a specific release
+make site PASSMCP_REF=v0.0.5   # build against a specific release
 make data                      # rewrite the page's numbers from the sample report
 make check-data                # fail if they differ, as CI does on pull requests
 ```
