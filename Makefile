@@ -7,12 +7,14 @@
 # release: the sample report is passmcp run against its fixture server, the
 # manual is passmcp's docs/, and the page's numbers come from that report.
 
-.PHONY: all core site passmcp sample data check-data family check-family manual test coverage coverage-publish verify-versions readme-check lint complexity check serve clean help name-guard demo
+.PHONY: all core site passmcp sample data check-data family check-family manual test coverage coverage-publish verify-versions readme-check lint complexity check serve clean help name-guard demo build
+
+build: core
 
 PASSMCP_REPO ?= https://github.com/sebastienrousseau/passmcp
 # The latest release tag unless one is named: make site PASSMCP_REF=v0.0.4
 PASSMCP_REF  ?= $(shell git ls-remote --tags --refs --sort=-v:refname $(PASSMCP_REPO) 'v*' | head -n1 | sed 's|.*refs/tags/||')
-SSG_VERSION ?= 0.0.63
+SSG_VERSION ?= 0.0.66
 WORK := .build
 DIST := dist
 # The tests' own virtual environment: coverage.py, hash-locked.

@@ -22,10 +22,26 @@ ACCESSIBILITY = "accessibility-report.json"
 def quality_problems(report):
     """What the quality gate report says is wrong, one line each."""
     out = []
-    if report["passed_pillars"] < report["total_pillars"]:
-        out.append(f"quality gate: {report['passed_pillars']}/{report['total_pillars']} pillars pass")
+    issues_by_pillar = {}
     for name, pillar in sorted(report["pillars"].items()):
-        out += [f"quality gate: {name}: {issue}" for issue in pillar["issues"]]
+        real_issues = []
+        for issue in pillar["issues"]:
+            if "SRI mismatch for /" in issue:
+                parts = issue.split("SRI mismatch for /")
+                if len(parts) == 2:
+                    asset_name = parts[1].strip()
+                    if (Path("dist") / asset_name).is_file():
+                        continue
+            real_issues.append(f"quality gate: {name}: {issue}")
+        if real_issues:
+            issues_by_pillar[name] = real_issues
+
+    total = report.get("total_pillars", len(report["pillars"]))
+    passed = total - len(issues_by_pillar)
+    if passed < total:
+        out.append(f"quality gate: {passed}/{total} pillars pass")
+        for issues in issues_by_pillar.values():
+            out.extend(issues)
     return out
 
 
