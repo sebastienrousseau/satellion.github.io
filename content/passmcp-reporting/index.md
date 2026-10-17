@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 name: "Satellion"
 title: "satellion.com/passmcp-reporting"
-description: "The attestation a passmcp run makes about an MCP server, and the verifier that checks one offline, licensed so a gateway, registry or CI system can embed it."
+description: "The attestation format passmcp writes about MCP servers and A2A agents, its JSON Schemas and the verifier that checks one offline, plus the security graph model, licensed so a gateway, registry or CI system can embed it."
 author: "Sebastien Rousseau"
 date: "2026-09-28"
 layout: "doc"
@@ -20,11 +20,11 @@ go_import: "satellion.com/passmcp-reporting git https://github.com/sebastienrous
 go_source: "satellion.com/passmcp-reporting https://github.com/sebastienrousseau/passmcp-reporting https://github.com/sebastienrousseau/passmcp-reporting/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-reporting/blob/main{/dir}/{file}#L{line}"
 eyebrow: "Go module"
 headline: "satellion.com/passmcp-reporting"
-lead: "The attestation a passmcp run makes about an MCP server, and the verifier that checks one offline, licensed so a gateway, registry or CI system can embed it."
+lead: "The attestation format passmcp writes about MCP servers and A2A agents, its JSON Schemas and the verifier that checks one offline, plus the security graph model, licensed so a gateway, registry or CI system can embed it."
 ---
 
 ```sh
-go get satellion.com/passmcp-reporting@v0.0.5
+go get satellion.com/passmcp-reporting@v0.0.7
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-reporting](https://github.com/sebastienrousseau/passmcp-reporting)

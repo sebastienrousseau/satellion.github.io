@@ -7,13 +7,16 @@
 # release: the sample report is passmcp run against its fixture server, the
 # manual is passmcp's docs/, and the page's numbers come from that report.
 
-.PHONY: all core site passmcp sample data check-data family check-family manual test coverage coverage-publish verify-versions readme-check lint complexity check serve clean help name-guard demo build
+.PHONY: all core site passmcp sample data check-data family check-family manual graph graph-demo graph-shot test coverage coverage-publish verify-versions readme-check lint complexity check serve clean help name-guard demo build
 
 build: core
 
 PASSMCP_REPO ?= https://github.com/sebastienrousseau/passmcp
-# The latest release tag unless one is named: make site PASSMCP_REF=v0.0.5
+# The latest release tag unless one is named: make site PASSMCP_REF=v0.0.7
 PASSMCP_REF  ?= $(shell git ls-remote --tags --refs --sort=-v:refname $(PASSMCP_REPO) 'v*' | head -n1 | sed 's|.*refs/tags/||')
+PASSMCP_GRAPH_REPO ?= https://github.com/sebastienrousseau/passmcp-graph
+# The latest release tag unless one is named: make site PASSMCP_GRAPH_REF=v0.0.7
+PASSMCP_GRAPH_REF  ?= $(shell git ls-remote --tags --refs --sort=-v:refname $(PASSMCP_GRAPH_REPO) 'v*' | head -n1 | sed 's|.*refs/tags/||')
 SSG_VERSION ?= 0.0.66
 WORK := .build
 DIST := dist
@@ -45,6 +48,38 @@ data: sample
 
 check-data: sample
 	python3 scripts/site_data.py $(WORK)/sample/report.json content/passmcp/index.md $(WORK)/passmcp/docs/checks.md --check
+
+# passmcp-graph at its release, checked out once per ref.
+graph:
+	@test -n "$(PASSMCP_GRAPH_REF)" || { echo "no passmcp-graph release found" >&2; exit 1; }
+	@if [ "$$(git -C $(WORK)/passmcp-graph describe --tags --exact-match 2>/dev/null)" != "$(PASSMCP_GRAPH_REF)" ]; then \
+	  rm -rf $(WORK)/passmcp-graph; \
+	  git clone --quiet --depth 1 --branch $(PASSMCP_GRAPH_REF) $(PASSMCP_GRAPH_REPO) $(WORK)/passmcp-graph; \
+	fi
+	cd $(WORK)/passmcp-graph && go build -o ../passmcp-graph-bin ./cmd/passmcp-graph
+
+# passmcp-graph's dashboard of its own published fixture graph, the same
+# graph its README demo and tests use, rendered share-safe. It is one
+# self-contained HTML page that loads nothing, served at /passmcp-graph/demo/.
+graph-demo: graph
+	rm -rf $(WORK)/graph-store $(WORK)/graph-demo && mkdir -p $(WORK)/graph-demo
+	$(WORK)/passmcp-graph-bin --store $(WORK)/graph-store import $(WORK)/passmcp-graph/testdata/fixture/graph.json
+	$(WORK)/passmcp-graph-bin --store $(WORK)/graph-store dashboard --share-safe --out $(WORK)/graph-demo/index.html
+
+# images/graph-dashboard*.webp, the still of that demo on passmcp's page:
+# headless Chrome at 1440x900 in dark mode, then cwebp at three widths.
+# Re-run when a passmcp-graph release changes the dashboard. Needs Chrome
+# and cwebp.
+graph-shot: graph-demo
+	rm -rf $(WORK)/graph-shot && mkdir -p $(WORK)/graph-shot/profile
+	timeout 60 "$(CHROME)" --headless=new --user-data-dir="$(CURDIR)/$(WORK)/graph-shot/profile" --no-first-run \
+	  --disable-gpu --hide-scrollbars --force-device-scale-factor=1 --window-size=1440,900 \
+	  --blink-settings=preferredColorScheme=0 --force-prefers-reduced-motion --virtual-time-budget=5000 \
+	  --screenshot="$(CURDIR)/$(WORK)/graph-shot/dashboard.png" "file://$(CURDIR)/$(WORK)/graph-demo/index.html" >/dev/null 2>&1 || true
+	test -s $(WORK)/graph-shot/dashboard.png || { echo "graph-shot: no screenshot" >&2; exit 1; }
+	cwebp -quiet -q 82 -resize 1200 0 $(WORK)/graph-shot/dashboard.png -o images/graph-dashboard.webp
+	cwebp -quiet -q 82 -resize 640 0 $(WORK)/graph-shot/dashboard.png -o images/graph-dashboard-640.webp
+	cwebp -quiet -q 82 -resize 320 0 $(WORK)/graph-shot/dashboard.png -o images/graph-dashboard-320.webp
 
 # The family table on the company page and passmcp's page, from the
 # ecosystem.json of the passmcp release being built. site renders it from
@@ -142,9 +177,11 @@ core:
 	@echo "core: built $(DIST)"
 
 # site is core plus what comes from the passmcp release: the numbers on the
-# product page, the family table, the manual and the sample report.
-site: data family manual core
+# product page, the family table, the manual and the sample report; and,
+# from the passmcp-graph release, the dashboard demo.
+site: data family manual graph-demo core
 	cp -R $(WORK)/manual $(DIST)/passmcp/docs
+	mkdir -p $(DIST)/passmcp-graph/demo && cp $(WORK)/graph-demo/index.html $(DIST)/passmcp-graph/demo/index.html
 	cp -R $(WORK)/sample $(DIST)/passmcp/sample
 	# Last, because it indexes the finished tree.
 	cd $(WORK)/passmcp && go run ./scripts/sitemap/main.go $(CURDIR)/$(DIST)

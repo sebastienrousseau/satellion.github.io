@@ -15,17 +15,19 @@ form_origin: "'self'"
 theme_style: "style-satellion"
 theme_colour: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
-# A nested module of passmcp-reporting: Go fetches this path, reads the
-# repository root's tag, and finds the module in integrations/agentgateway-extmcp.
+# A nested module of passmcp-reporting: Go fetches this path, maps it to the
+# repository root below, and reads the tags prefixed
+# integrations/agentgateway-extmcp/ (integrations/agentgateway-extmcp/v0.0.7),
+# not the root's own tags.
 go_import: "satellion.com/passmcp-reporting git https://github.com/sebastienrousseau/passmcp-reporting"
 go_source: "satellion.com/passmcp-reporting https://github.com/sebastienrousseau/passmcp-reporting https://github.com/sebastienrousseau/passmcp-reporting/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-reporting/blob/main{/dir}/{file}#L{line}"
 eyebrow: "Go module"
 headline: "satellion.com/passmcp-reporting/integrations/agentgateway-extmcp"
-lead: "The agentgateway processor that gates MCP backends on passmcp attestations, verified offline at startup."
+lead: "The agentgateway processor that gates MCP backends on passmcp attestations, verified offline at startup and again on each reload (SIGHUP or -reload-interval)."
 ---
 
 ```sh
-go install satellion.com/passmcp-reporting/integrations/agentgateway-extmcp/cmd/agentgateway-extmcp@v0.0.5
+go install satellion.com/passmcp-reporting/integrations/agentgateway-extmcp/cmd/agentgateway-extmcp@v0.0.7
 ```
 
 - Module: [satellion.com/passmcp-reporting](/passmcp-reporting/)

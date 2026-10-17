@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 name: "Satellion"
 short_name: "Satellion"
-title: "Satellion — evidence you can check, for the servers your agents trust"
+title: "Satellion: evidence you can check, for the servers your agents trust"
 description: "Satellion builds open-source tools that test the infrastructure AI agents connect to and prove what they found. Its first is passmcp, which checks any MCP server and writes an attestation anyone can verify offline."
 keywords: "Satellion, passmcp, MCP security, MCP server testing, agent security, MCP attestation, Model Context Protocol"
 author: "Sebastien Rousseau"
@@ -73,7 +73,7 @@ trust_two_title: "Advisories"
 trust_two_text: "Every fixed vulnerability is published as a GitHub security advisory, with the affected versions."
 trust_two_link: "https://github.com/sebastienrousseau/passmcp/security/advisories"
 trust_three_title: "EU Cyber Resilience Act"
-trust_three_text: "Each release carries an SBOM per artefact, SLSA provenance and an OpenVEX statement, with every claim linked to its evidence."
+trust_three_text: "Each release carries an SBOM per artefact and SLSA provenance, and an OpenVEX statement whenever a dependency advisory does not affect it, with every claim linked to its evidence."
 trust_three_link: "passmcp/docs/compliance/cra/"
 ---
 

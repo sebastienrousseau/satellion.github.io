@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: GPL-3.0-only
 name: "passmcp"
 short_name: "passmcp"
-title: "passmcp — prove an MCP server is safe for your agents"
-description: "passmcp tests a live MCP server the way an agent would: 138 checks in nine phases, every finding tied to the request that showed it, and a signed attestation you can verify offline. Open source, runs where your credentials already are."
+title: "passmcp: prove an MCP server is safe for your agents"
+description: "passmcp tests a live MCP server the way an agent would: 138 checks in nine phases, every finding tied to the request that showed it, and an in-toto attestation you can sign with cosign and verify offline. Open source, runs where your credentials already are."
 keywords: "MCP server testing, MCP security, Model Context Protocol conformance, MCP attestation, MCP scanner, agent security, MCP Inspector alternative, MCP CI gate"
 author: "Sebastien Rousseau"
 date: "2026-09-26"
@@ -24,7 +24,7 @@ footer_note: "A verdict is worth what its evidence is worth."
 
 eyebrow: "Open source · runs on your machine or in CI · no telemetry"
 headline: "Prove an MCP server is safe for your agents, with evidence anyone can check."
-lead: "passmcp connects to a live MCP server the way an agent would, runs 138 checks in nine phases, and ties every finding to the request that showed it. It writes a signed attestation that a gateway, a registry or an auditor can verify offline. Nothing is uploaded and nothing is guessed."
+lead: "passmcp connects to a live MCP server the way an agent would, has 138 checks across nine phases, and ties every finding to the request that showed it. It writes an in-toto attestation that you sign with the tooling you already trust, and that a gateway, a registry or an auditor can verify offline. Nothing is uploaded and nothing is guessed."
 cta_primary: "Install"
 cta_secondary: "See a real report"
 cta_tertiary: "Verify an attestation"
@@ -45,8 +45,8 @@ only_one_title: "Live protocol validation"
 only_one_text: "Handshake, conformance, catalogue, safe execution, latency and recovery, run against the real server over the real transport, on both the handshake revisions and the stateless 2026-07-28 revision."
 only_two_title: "Evidence tied to requests"
 only_two_text: "Every finding cites the numbered request that produced it, and the report directory keeps the NDJSON event stream and a HAR file. A verdict you dispute is a verdict you can replay."
-only_three_title: "Signed, offline-verifiable attestations"
-only_three_text: "passmcp writes an in-toto statement about the server. The verifier is Apache-2.0 and has no dependencies, so a gateway, registry or auditor can check it without trusting anyone's server."
+only_three_title: "Offline-verifiable attestations, signed your way"
+only_three_text: "passmcp writes an in-toto statement about the server. The verifier is Apache-2.0 and has no dependencies, so a gateway, registry or auditor can check it without trusting anyone's server. Sign it with cosign; passmcp deliberately neither signs nor checks signatures (ADR 0010)."
 only_four_title: "A gate, not a report"
 only_four_text: "Exit status 2 on a failed check, a policy file for what counts, SARIF for code scanning and JUnit for test reports. The check that gates a release is the one an engineer already ran."
 
@@ -63,7 +63,7 @@ why_three_text: "Only tools that declare readOnlyHint are called. A tool with no
 compare_eyebrow: "How it compares"
 compare_title: "Use the right tool for the question."
 compare_lead: "The Inspector is for exploring by hand; static scanners read metadata and code; hosted agent-security platforms inventory what exists across your SaaS. passmcp answers a different question: does this server behave safely, and can you prove it?"
-compare_note: "Sources, as each project describes itself on 26 Sep 2026: Cisco mcp-scanner (github.com/cisco-ai-defense/mcp-scanner), Snyk agent-scan (github.com/snyk/agent-scan), MCP Inspector (github.com/modelcontextprotocol/inspector), and the public product pages of hosted agent-security platforms such as reco.ai. 'Not documented' means we found no public description of the capability, not proof that it is absent. Corrections are welcome as issues."
+compare_note: "Sources, as each project describes itself on 17 Oct 2026: Cisco mcp-scanner (github.com/cisco-ai-defense/mcp-scanner), Snyk agent-scan (github.com/snyk/agent-scan), MCP Inspector (github.com/modelcontextprotocol/inspector), and the public product pages of hosted agent-security platforms such as reco.ai. 'Not documented' means we found no public description of the capability, not proof that it is absent. Corrections are welcome as issues."
 
 ledger_eyebrow: "Scoring"
 ledger_title: "Every deduction named."
@@ -85,25 +85,34 @@ int_one_text: "passmcp-action runs passmcp from its release image, pinned by dig
 int_two_title: "Your agents, through MCP"
 int_two_text: "passmcp-server exposes passmcp as three read-only tools, so an agent can evaluate a server or verify an attestation. It is listed in the MCP Registry."
 int_three_title: "agentgateway"
-int_three_text: "An ExtMcp processor in passmcp-reporting lets agentgateway refuse MCP backends whose attestation is missing, stale or failing, verified offline, with no call to passmcp."
+int_three_text: "An ExtMcp processor in passmcp-reporting lets agentgateway refuse MCP backends whose attestation is missing, invalid, about a different endpoint, below a score floor or failing in a named category, verified offline, with no call to passmcp."
 int_four_title: "Code scanning and test reports"
 int_four_text: "SARIF for GitHub code scanning, JUnit XML for any CI, JSON and NDJSON for pipelines, HAR for devtools, OTLP traces for your collector."
 int_five_title: "Your package manager"
-int_five_text: "Homebrew, the Arch User Repository (yay -S passmcp), Nix, .deb and .rpm, a signed container image, or go install."
+int_five_text: "Homebrew, mise, .deb and .rpm, a signed container image, or go install."
 int_six_title: "Your own code"
-int_six_text: "The Go packages the CLI is built on are public. The attestation verifier is Apache-2.0 with no dependencies, so any consumer can embed it."
+int_six_text: "passmcp's client, OAuth, transport and diagnostics packages are public Go packages. The attestation verifier is Apache-2.0 with no dependencies, so any consumer can embed it."
+
+graph_eyebrow: "Across every agent"
+graph_title: "See which agents reach which servers, and what that exposes."
+graph_lead: "passmcp tests one server at a time. passmcp-graph reads the attestations and JSON reports passmcp writes, with your Claude Desktop, Cursor, VS Code and Zed configurations, and maps which agents reach which servers, tools and identities. It names risks a client inherits from a failing server and identities that hold more than their tools need, answers path queries, and gates CI on a policy, all offline."
+graph_alt: "passmcp-graph's command centre: two configured clients joined to four MCP servers around a ring counting six tool paths, under a banner naming a critical finding"
+graph_caption: "passmcp-graph's published fixture graph, rendered share-safe by passmcp-graph dashboard from"
+graph_cta: "Open the live demo"
+graph_cta_secondary: "passmcp-graph on GitHub"
+graph_version: "0.0.7"
 
 trust_eyebrow: "Trust"
 trust_title: "Auditable the way it asks servers to be."
 trust_lead: "passmcp is software you run, not a service you send data to, so the questions that matter are about the software itself. Here is how to check each answer yourself."
 trust_one_title: "Signed and attested releases"
-trust_one_text: "Signed tags; checksums signed with keyless cosign; SLSA build provenance; a CycloneDX SBOM per archive; the container base pinned by digest."
+trust_one_text: "Signed tags; checksums signed with keyless cosign; SLSA build provenance; a CycloneDX SBOM per archive and per package; the container image signed with keyless cosign and its base pinned by digest."
 trust_two_title: "No telemetry, ever"
 trust_two_text: "No account, no analytics, no phone-home. passmcp contacts the server you named and the authorization endpoints it advertises, and nothing else unless you opt in by flag, as with --osv for advisories or --model for explain. That is a recorded decision, ADR 0006."
 trust_three_title: "Never in the data path"
 trust_three_text: "passmcp does not proxy, terminate or forward an agent's request, and no agent request waits on anything passmcp operates. ADR 0007 draws that line, and the gateway integrations respect it."
 trust_four_title: "Compliance, stated honestly"
-trust_four_text: "passmcp holds no SOC 2 or ISO 27001 certificate; those apply to service providers, and passmcp runs on yours. Every check is mapped to the SOC 2 Trust Services Criteria, ISO/IEC 27001:2022 Annex A and GDPR articles it evidences, released in 0.0.1, so its evidence drops into your audit. Mappings, not certifications: an auditor certifies."
+trust_four_text: "passmcp holds no SOC 2 or ISO 27001 certificate; those apply to service providers, and passmcp runs on yours. Every check is mapped to the SOC 2 Trust Services Criteria, ISO/IEC 27001:2022 Annex A controls and GDPR articles it evidences, or marked as evidencing none with the reason, released in 0.0.1, so its evidence drops into your audit. Mappings, not certifications: an auditor certifies."
 
 context_eyebrow: "Why now"
 context_title: "The dates your agent programme is working to."
@@ -114,7 +123,7 @@ faq_eyebrow: "Questions"
 faq_title: "The things people ask before installing."
 faq_lead: "Short answers. Longer ones are in the manual."
 faq_one_q: "How is this different from the official MCP Inspector?"
-faq_one_a: "The Inspector is an excellent place to explore a server by hand: click a tool, read a response, debug an OAuth flow. passmcp is the non-interactive counterpart. It runs 138 checks, scores the result, cites its evidence, signs an attestation and returns an exit code. Most teams use both."
+faq_one_a: "The Inspector is an excellent place to explore a server by hand: click a tool, read a response, debug an OAuth flow. passmcp is the non-interactive counterpart. It runs up to 138 checks, scores the result, cites its evidence, writes an attestation and returns an exit code. Most teams use both."
 faq_two_q: "How is it different from static MCP scanners?"
 faq_two_a: "Scanners such as Cisco's mcp-scanner read tool metadata and source code. passmcp talks to the running server over its real transport, so it sees what the server does: whether it rejects a bad token, validates arguments, honours Origin, recovers a session. passmcp also reads the catalogue for hidden instructions and poisoning, so the two overlap on text but not on behaviour."
 faq_three_q: "Does it support the stateless 2026-07-28 revision?"
@@ -122,15 +131,15 @@ faq_three_a: "Yes. All nine phases run on either generation. passmcp settles whi
 faq_four_q: "Is it safe to run against production?"
 faq_four_a: "It is designed for it. Only tools that declare readOnlyHint are called, and requests are throttled. Conformance probes are sent (an invalid token, an unknown method, malformed JSON, a session id the server never issued) to see how the server handles them, and nothing else adversarial. It is a diagnostic, not a penetration test."
 faq_five_q: "Does it test stdio servers?"
-faq_five_a: "Yes. passmcp --stdio -- <command> starts the server as a child process and runs every phase over its pipes. On Linux it also watches where the server connects, what it writes and what it spawns, and can seed decoy credentials to see whether it reads or sends them."
+faq_five_a: "Yes. passmcp check --stdio -- <command> starts the server as a child process and runs every phase over its pipes. On Linux it also reports where the server connects, what it writes and what it spawns after the handshake; with --watch-egress and --plant-canaries, on any platform, it reports where the server connects and whether it reads or sends planted decoy credentials."
 faq_six_q: "What does it cost, and what does it send back to you?"
-faq_six_a: "It is free and open source: the engine is GPL-3.0 and the attestation format and verifier are Apache-2.0. It sends nothing back, and there is no telemetry, account or analytics."
+faq_six_a: "It is free and open source: the engine is GPL-3.0-only and the attestation format and verifier are Apache-2.0. It sends nothing back, and there is no telemetry, account or analytics."
 faq_seven_q: "Can I verify an attestation without trusting you?"
 faq_seven_a: "Yes. passmcp verify checks a statement offline, and the verifier is a dependency-free Apache-2.0 Go package you can read, vendor or reimplement. Sign statements with the tooling you already trust, such as cosign, and verify the signature before you act on the verdict."
 
 install_eyebrow: "Get started"
 install_title: "One command, and no account to make."
-install_lead: "Install it, point it at a server, read the verdict. Everything below runs on your machine; the only requests passmcp makes are to the server you name."
+install_lead: "Install it, point it at a server, read the verdict. Everything below runs on your machine; passmcp makes requests only to the server you name and the authorization servers it advertises."
 readout_target: "acme-crm 2.4.0, passmcp's deliberately flawed fixture server"
 readout_verdict: "5 failing checks to fix before agents rely on it"
 readout_score: "69.25"
@@ -183,17 +192,15 @@ evidence_2_req: "req#12"
 evidence_2_id: "protocol.unknown_tool"
 evidence_2_title: "Unknown tool is reported"
 evidence_2_detail: "calling a non-existent tool returned success"
-readout_version: "0.0.5"
+readout_version: "0.0.7"
 ---
 
 ## Install
 
 ```sh
 brew install sebastienrousseau/tap/passmcp     # macOS and Linux
-yay -S passmcp                                 # Arch Linux, or: paru -S passmcp
 mise use -g github:sebastienrousseau/passmcp   # with mise
-nix run github:sebastienrousseau/passmcp -- --help
-go install satellion.com/passmcp/cmd/passmcp@v0.0.5
+go install satellion.com/passmcp/cmd/passmcp@v0.0.7
 ```
 
 Then point it at a server:
@@ -239,15 +246,15 @@ passmcp check "$MCP_ENDPOINT" --token-env MCP_TOKEN \
   --output json --report-dir ./passmcp-report
 ```
 
-The report directory holds the JSON verdict, the NDJSON event stream and a
-HAR archive of every exchange. Attach it to the build and the question
+The report directory holds the JSON verdict, SARIF, JUnit, the attestation,
+the NDJSON event stream and a HAR archive of every exchange. Attach it to the build and the question
 "how do you know?" has an answer that outlives the person who ran it.
 
 ## What it checks
 
 Connectivity and TLS. How the server asks to be authorized, and whether it
 refuses a bad token. The MCP handshake, and which generation of the protocol
-it speaks — passmcp supports both the handshake revisions and the stateless
+it speaks; passmcp supports both the handshake revisions and the stateless
 `2026-07-28` one. Protocol behaviour on the edge cases an agent will hit.
 The tool catalogue, as a model reads it: descriptions, schemas, annotations,
 and whether `$ref` and `$defs` resolve. Safe calls, with results checked
@@ -258,9 +265,12 @@ be as stateless as it claims.
 ## What it will not do
 
 It calls only tools that declare `readOnlyHint` unless you say otherwise.
-It throttles itself. It sends one deliberately invalid token to check the
-server rejects it, and nothing else adversarial. It is a diagnostic, not a
+It throttles itself. It sends protocol conformance probes (an invalid
+token, an unknown method, malformed JSON, a session id it never received, a
+foreign Origin) to see how the server handles them, and nothing adversarial
+beyond that (ADR 0008). It is a diagnostic, not a
 penetration test, and the difference is deliberate.
 
 It also will not phone home. There is no telemetry, no account and no
-analytics — the only requests passmcp makes are to the server you named.
+analytics: passmcp contacts only the server you named and the authorization
+servers it advertises, plus anything you opt into by flag.
