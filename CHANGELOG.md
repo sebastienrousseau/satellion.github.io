@@ -7,16 +7,61 @@ All notable changes to satellion.com are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions move by
 0.0.1 a release, as across the passmcp family.
 
-## [0.0.5] — 2026-10-09
+## [0.0.7] - Unreleased
+
+0.0.5 was never tagged; its changes ship in this release, at the family's
+version.
+
+### Added
+
+- **A live passmcp-graph demo.** passmcp's page has a section on
+  passmcp-graph with a still of its dashboard, and `make site` serves the
+  page itself at `/passmcp-graph/demo/`: passmcp-graph's published fixture
+  graph, rendered share-safe by `passmcp-graph dashboard` from its latest
+  release (`PASSMCP_GRAPH_REF`). `make graph-shot` re-renders the still,
+  and `make verify-versions` fails when the version it shows is not the
+  family's.
 
 ### Changed
 
-- **Built against passmcp 0.0.5.** The numbers, sample report and family
-  table come from the 0.0.5 release.
+- **Built against passmcp 0.0.7.** The numbers, sample report and family
+  table come from the 0.0.7 release, and every `go install` and `go get`
+  line pins 0.0.7.
+- **Every package described as it ships at 0.0.7.** passmcp-graph's page
+  names its reports, client configurations, policy gate and dashboard;
+  passmcp-lsp's names policies and attestations; passmcp-census's says no
+  edition has been published yet; passmcp-registry's and
+  passmcp-reporting's follow their READMEs; the agentgateway processor's
+  says it re-verifies on reload, and its comment names the prefixed tags
+  Go reads.
+- **passmcp's page corrected against passmcp 0.0.7.**
+  - passmcp writes an in-toto attestation and leaves signing to cosign
+    (ADR 0010); the page no longer says it signs one.
+  - `--stdio` is a flag of `passmcp check`; the egress watch and decoy
+    credentials are opt-in flags on every platform, and only the
+    post-handshake witness is Linux-only.
+  - passmcp sends protocol conformance probes, not only an invalid
+    token, and contacts the authorization servers a target advertises as
+    well as the target.
+  - The agentgateway processor refuses an attestation that is missing,
+    invalid, about another endpoint, below a score floor or failing in a
+    named category; it has no staleness check.
+  - The Nix and AUR install lines are removed: passmcp's flake has no
+    vendor hash at 0.0.7, and the AUR package is at 0.0.4.
+  - SBOMs cover packages as well as archives, the container image is
+    cosign-signed, unmapped checks are marked with a reason, the report
+    directory's files are listed in full, and the licence reads
+    GPL-3.0-only.
+  - The comparison table's cells for MCP Inspector, Cisco mcp-scanner and
+    Snyk agent-scan follow each project's README as of 17 Oct 2026.
+- **The company page's OpenVEX claim made exact.** A release carries an
+  OpenVEX statement only when a dependency advisory does not affect it.
+- **Upgraded the GitHub Actions** CodeQL and Scorecard use (Dependabot
+  #7).
 - **Upgraded static engine to SSG 0.0.66.** Quality gate supports
   root-relative SRI verification.
 
-## [0.0.4] — 2026-09-30
+## [0.0.4] - 2026-09-30
 
 ### Added
 
@@ -67,7 +112,7 @@ All notable changes to satellion.com are documented here. The format follows
   score is exposed as one labelled image; and commands in prose wrap
   instead of scrolling where a keyboard cannot reach them.
 
-## [0.0.3] — 2026-09-30
+## [0.0.3] - 2026-09-30
 
 ### Added
 
@@ -110,7 +155,7 @@ All notable changes to satellion.com are documented here. The format follows
 - The "Planned" roadmap section of passmcp's page: all three items it
   listed were released in passmcp 0.0.1.
 
-## [0.0.1] — 2026-09-29
+## [0.0.1] - 2026-09-29
 
 The first release.
 

@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 name: "Satellion"
 title: "satellion.com/passmcp-graph"
-description: "A local graph of which agents use which MCP servers, which tools those servers expose and which identities reach them, built from passmcp's attestations and queried offline."
+description: "A local graph of which agents use which MCP servers, which tools those servers expose and which identities reach them, built from passmcp's attestations and reports and your MCP client configurations, queried offline, gated by policy in CI, and shown as one offline HTML dashboard."
 author: "Sebastien Rousseau"
 date: "2026-09-28"
 layout: "doc"
@@ -20,13 +20,14 @@ go_import: "satellion.com/passmcp-graph git https://github.com/sebastienrousseau
 go_source: "satellion.com/passmcp-graph https://github.com/sebastienrousseau/passmcp-graph https://github.com/sebastienrousseau/passmcp-graph/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-graph/blob/main{/dir}/{file}#L{line}"
 eyebrow: "Go module"
 headline: "satellion.com/passmcp-graph"
-lead: "A local graph of which agents use which MCP servers, which tools those servers expose and which identities reach them, built from passmcp's attestations and queried offline."
+lead: "A local graph of which agents use which MCP servers, which tools those servers expose and which identities reach them, built from passmcp's attestations and reports and your MCP client configurations, queried offline, gated by policy in CI, and shown as one offline HTML dashboard."
 ---
 
 ```sh
-go install satellion.com/passmcp-graph/cmd/passmcp-graph@v0.0.5
+go install satellion.com/passmcp-graph/cmd/passmcp-graph@v0.0.7
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-graph](https://github.com/sebastienrousseau/passmcp-graph)
 - API documentation: [pkg.go.dev/satellion.com/passmcp-graph](https://pkg.go.dev/satellion.com/passmcp-graph)
+- Live demo: [the dashboard of passmcp-graph's fixture graph](/passmcp-graph/demo/), rendered share-safe by `passmcp-graph dashboard`
 

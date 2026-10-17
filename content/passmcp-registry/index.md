@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 name: "Satellion"
 title: "satellion.com/passmcp-registry"
-description: "A signed public scorecard of the remote servers in the MCP Registry, each checked read-only and without credentials by a pinned passmcp release."
+description: "A signed public scorecard of the remote servers in the MCP Registry: each checked read-only and without credentials by a pinned passmcp release, every result an offline-verifiable attestation, and anything that would expose a vulnerability withheld for its owner first."
 author: "Sebastien Rousseau"
 date: "2026-09-28"
 layout: "doc"
@@ -20,11 +20,11 @@ go_import: "satellion.com/passmcp-registry git https://github.com/sebastienrouss
 go_source: "satellion.com/passmcp-registry https://github.com/sebastienrousseau/passmcp-registry https://github.com/sebastienrousseau/passmcp-registry/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-registry/blob/main{/dir}/{file}#L{line}"
 eyebrow: "Go module"
 headline: "satellion.com/passmcp-registry"
-lead: "A signed public scorecard of the remote servers in the MCP Registry, each checked read-only and without credentials by a pinned passmcp release."
+lead: "A signed public scorecard of the remote servers in the MCP Registry: each checked read-only and without credentials by a pinned passmcp release, every result an offline-verifiable attestation, and anything that would expose a vulnerability withheld for its owner first."
 ---
 
 ```sh
-go install satellion.com/passmcp-registry/cmd/passmcp-registry@v0.0.5
+go install satellion.com/passmcp-registry/cmd/passmcp-registry@v0.0.7
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-registry](https://github.com/sebastienrousseau/passmcp-registry)

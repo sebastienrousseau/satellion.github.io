@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 name: "Satellion"
 title: "satellion.com/passmcp-lsp"
-description: "A language server for MCP artefacts, with check-id hover from passmcp's guidance catalogue, to catch mistakes in server.json, tool schemas and client configuration while editing."
+description: "A language server for MCP artefacts: it checks server.json, MCP client configurations, MCP tool definitions, and passmcp policies and attestations as you type, and shows passmcp's guidance when you hover a check id."
 author: "Sebastien Rousseau"
 date: "2026-09-29"
 layout: "doc"
@@ -20,11 +20,11 @@ go_import: "satellion.com/passmcp-lsp git https://github.com/sebastienrousseau/p
 go_source: "satellion.com/passmcp-lsp https://github.com/sebastienrousseau/passmcp-lsp https://github.com/sebastienrousseau/passmcp-lsp/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-lsp/blob/main{/dir}/{file}#L{line}"
 eyebrow: "Go module"
 headline: "satellion.com/passmcp-lsp"
-lead: "A language server for MCP artefacts, with check-id hover from passmcp's guidance catalogue, to catch mistakes in server.json, tool schemas and client configuration while editing."
+lead: "A language server for MCP artefacts: it checks server.json, MCP client configurations, MCP tool definitions, and passmcp policies and attestations as you type, and shows passmcp's guidance when you hover a check id."
 ---
 
 ```sh
-go install satellion.com/passmcp-lsp/cmd/passmcp-lsp@v0.0.5
+go install satellion.com/passmcp-lsp/cmd/passmcp-lsp@v0.0.7
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-lsp](https://github.com/sebastienrousseau/passmcp-lsp)

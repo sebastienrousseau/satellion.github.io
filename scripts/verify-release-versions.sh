@@ -6,7 +6,8 @@
 # one: the newest CHANGELOG heading, the release notes, the version the
 # README's ecosystem section states, every `go install` and `go get` line
 # on the Go module pages, the passmcp release the product page was built
-# against, and the PASSMCP_REF examples. The passmcp family moves in
+# against, the passmcp-graph release its dashboard still shows, and the
+# PASSMCP_REF and PASSMCP_GRAPH_REF examples. The passmcp family moves in
 # lockstep, so every one of them is the same version.
 #
 #   scripts/verify-release-versions.sh            # the newest CHANGELOG version
@@ -45,9 +46,12 @@ fi
 built=$(sed -nE 's/^readout_version: "([^"]*)"$/\1/p' content/passmcp/index.md)
 [ "${built}" = "${ver}" ] || bad "content/passmcp/index.md was built against passmcp '${built}', not ${ver}; run make data"
 
-refs=$(grep -Eoh 'PASSMCP_REF=v[0-9]+\.[0-9]+\.[0-9]+' Makefile README.md DEVELOPMENT.md || true)
+graph=$(sed -nE 's/^graph_version: "([^"]*)"$/\1/p' content/passmcp/index.md)
+[ "${graph}" = "${ver}" ] || bad "content/passmcp/index.md shows passmcp-graph '${graph}', not ${ver}; run make graph-shot and update graph_version"
+
+refs=$(grep -Eoh 'PASSMCP(_GRAPH)?_REF=v[0-9]+\.[0-9]+\.[0-9]+' Makefile README.md DEVELOPMENT.md || true)
 if stale=$(grep -v "=v${ver}\$" <<<"${refs}"); then
-  bad "a PASSMCP_REF example names a release other than ${ver}: ${stale//$'\n'/, }"
+  bad "a PASSMCP_REF or PASSMCP_GRAPH_REF example names a release other than ${ver}: ${stale//$'\n'/, }"
 fi
 
 [ "${fail}" -eq 0 ] && echo "verify-release-versions: every version reference agrees on ${ver}"

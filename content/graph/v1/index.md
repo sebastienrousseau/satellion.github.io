@@ -24,5 +24,5 @@ This page is the identifier `https://satellion.com/graph/v1`. Consumers match on
 
 - Specification: [docs/graph.md](https://github.com/sebastienrousseau/passmcp-reporting/blob/main/docs/graph.md)
 - JSON Schema: [spec/graph/graph-v1.schema.json](https://github.com/sebastienrousseau/passmcp-reporting/blob/main/spec/graph/graph-v1.schema.json)
-- Verifier: [satellion.com/passmcp-reporting](/passmcp-reporting/), Apache-2.0
+- Go package: [satellion.com/passmcp-reporting/graph](/passmcp-reporting/), Apache-2.0
 

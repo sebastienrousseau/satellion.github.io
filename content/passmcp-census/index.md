@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 name: "Satellion"
 title: "satellion.com/passmcp-census"
-description: "The published MCP reliability census: the dataset, the methodology, the disclosure log and the command that reproduces the figures."
+description: "The passmcp reliability census: aggregate figures about the MCP Registry's remote servers, each checked read-only and without credentials by a released passmcp, with the methodology, the disclosure log and the command that reproduces them. No edition has been published yet."
 author: "Sebastien Rousseau"
 date: "2026-09-29"
 layout: "doc"
@@ -20,11 +20,11 @@ go_import: "satellion.com/passmcp-census git https://github.com/sebastienroussea
 go_source: "satellion.com/passmcp-census https://github.com/sebastienrousseau/passmcp-census https://github.com/sebastienrousseau/passmcp-census/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-census/blob/main{/dir}/{file}#L{line}"
 eyebrow: "Go module"
 headline: "satellion.com/passmcp-census"
-lead: "The published MCP reliability census: the dataset, the methodology, the disclosure log and the command that reproduces the figures."
+lead: "The passmcp reliability census: aggregate figures about the MCP Registry's remote servers, each checked read-only and without credentials by a released passmcp, with the methodology, the disclosure log and the command that reproduces them. No edition has been published yet."
 ---
 
 ```sh
-go install satellion.com/passmcp-census/cmd/passmcp-census@v0.0.5
+go install satellion.com/passmcp-census/cmd/passmcp-census@v0.0.7
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-census](https://github.com/sebastienrousseau/passmcp-census)

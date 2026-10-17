@@ -1253,3 +1253,14 @@ body::before {
 /* Commands in prose wrap rather than scroll: a scrolling <pre> is a region
  * a keyboard cannot reach, and a wrapped command still copies whole. */
 .prose pre, .prose pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* passmcp-graph's dashboard still: the picture is the link to the live
+ * demo, framed like the hero photograph, with its caption in the scene's
+ * muted ink. */
+.graph-demo { display: grid; gap: 1.25rem; }
+.graph-shot { margin: 0; }
+.graph-shot a { display: block; border-radius: 0.9rem; }
+.graph-shot a:focus-visible { outline: 3px solid var(--scene-ink); outline-offset: 4px; }
+.graph-shot img { display: block; width: 100%; height: auto; aspect-ratio: 1200 / 750; border-radius: 0.9rem; border: 1px solid rgb(255 255 255 / 18%); }
+.section-dark .graph-shot figcaption { margin-block-start: 0.9rem; color: var(--scene-muted); }
+@media print { .graph-shot { display: none !important; } }
