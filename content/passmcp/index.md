@@ -98,7 +98,6 @@ graph_title: "See which agents reach which servers, and what that exposes."
 graph_lead: "passmcp tests one server at a time. passmcp-graph reads the attestations and JSON reports passmcp writes, with your Claude Desktop, Cursor, VS Code and Zed configurations, and maps which agents reach which servers, tools and identities. It names risks a client inherits from a failing server and identities that hold more than their tools need, answers path queries, and gates CI on a policy, all offline."
 graph_alt: "passmcp-graph's command centre: two configured clients joined to four MCP servers around a ring counting six tool paths, under a banner naming a critical finding"
 graph_caption: "passmcp-graph's published fixture graph, rendered share-safe by passmcp-graph dashboard from"
-graph_cta: "Open the live demo"
 graph_cta_secondary: "passmcp-graph on GitHub"
 graph_version: "0.0.7"
 

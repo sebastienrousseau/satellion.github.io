@@ -59,8 +59,10 @@ graph:
 	cd $(WORK)/passmcp-graph && go build -o ../passmcp-graph-bin ./cmd/passmcp-graph
 
 # passmcp-graph's dashboard of its own published fixture graph, the same
-# graph its README demo and tests use, rendered share-safe. It is one
-# self-contained HTML page that loads nothing, served at /passmcp-graph/demo/.
+# graph its README demo and tests use, rendered share-safe: the page that
+# images/graph-dashboard*.webp is taken from. It is not published: the
+# site's Content-Security-Policy allows no inline script or style, which
+# the single-file dashboard of passmcp-graph 0.0.7 needs.
 graph-demo: graph
 	rm -rf $(WORK)/graph-store $(WORK)/graph-demo && mkdir -p $(WORK)/graph-demo
 	$(WORK)/passmcp-graph-bin --store $(WORK)/graph-store import $(WORK)/passmcp-graph/testdata/fixture/graph.json
@@ -185,11 +187,9 @@ core:
 	@echo "core: built $(DIST)"
 
 # site is core plus what comes from the passmcp release: the numbers on the
-# product page, the family table, the manual and the sample report; and,
-# from the passmcp-graph release, the dashboard demo.
-site: data family manual graph-demo core
+# product page, the family table, the manual and the sample report.
+site: data family manual core
 	cp -R $(WORK)/manual $(DIST)/passmcp/docs
-	mkdir -p $(DIST)/passmcp-graph/demo && cp $(WORK)/graph-demo/index.html $(DIST)/passmcp-graph/demo/index.html
 	cp -R $(WORK)/sample $(DIST)/passmcp/sample
 	# Last, because it indexes the finished tree.
 	cd $(WORK)/passmcp && go run ./scripts/sitemap/main.go $(CURDIR)/$(DIST)

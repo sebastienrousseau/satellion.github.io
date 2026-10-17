@@ -29,5 +29,4 @@ go install satellion.com/passmcp-graph/cmd/passmcp-graph@v0.0.7
 
 - Source: [github.com/sebastienrousseau/passmcp-graph](https://github.com/sebastienrousseau/passmcp-graph)
 - API documentation: [pkg.go.dev/satellion.com/passmcp-graph](https://pkg.go.dev/satellion.com/passmcp-graph)
-- Live demo: [the dashboard of passmcp-graph's fixture graph](/passmcp-graph/demo/), rendered share-safe by `passmcp-graph dashboard`
 
