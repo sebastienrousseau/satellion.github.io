@@ -147,6 +147,34 @@ class Render(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unsupported ecosystem.json schema_version 3"):
             family.load(manifest(3, []))
 
+    def test_a_malformed_manifest_is_refused_not_crashed(self):
+        # Each of these crashed with AttributeError, KeyError or TypeError
+        # instead of the "family: <file>: <reason>" exit main promises.
+        for text in ["[]", '"x"', json.dumps({"schema_version": 2}),
+                     json.dumps({"schema_version": 2, "repositories": 5}),
+                     manifest(2, ["passmcp"]),
+                     manifest(2, [{"status": "released"}]),
+                     manifest(2, [{"name": 7, "status": "released"}]),
+                     manifest(2, [{"name": "x", "status": "released", "role": 3}]),
+                     manifest(2, [{"name": "x", "status": ["released"]}])]:
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                family.load(text)
+
+    def test_deeply_nested_json_is_refused_not_crashed(self):
+        # json.loads raises RecursionError, not ValueError, past Python's
+        # recursion limit.
+        with self.assertRaisesRegex(ValueError, "nested too deeply"):
+            family.load("[" * 100_000)
+
+    def test_a_repository_name_cannot_leave_its_link(self):
+        # The repository goes into an href; a quote in it would add
+        # attributes to the site's markup.
+        for repository in ['x" onmouseover="alert(1)', "../x", "x/y", "..", "a b"]:
+            rows = [{"name": "x", "repository": repository, "status": "released"}]
+            with self.subTest(repository=repository), \
+                    self.assertRaisesRegex(ValueError, "x: repository"):
+                family.load(manifest(2, rows))
+
     def test_main_writes_then_checks_and_fails_on_drift(self):
         with tempfile.TemporaryDirectory() as d:
             src, out = Path(d, "ecosystem.json"), Path(d, "family.html")

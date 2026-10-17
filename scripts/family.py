@@ -20,6 +20,7 @@ differs from what the manifest renders.
 """
 import html
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -36,31 +37,56 @@ STATUSES = {
 # Schema 1 has no repository field. Every row but this site's is named
 # after its repository; the site is named after its domain.
 SCHEMA_1_REPOSITORIES = {"satellion.com": "satellion.github.io"}
+# What GitHub allows in a repository name.
+REPOSITORY = re.compile(r"[A-Za-z0-9._-]+")
 NUMBERS = "zero one two three four five six seven eight nine ten eleven twelve".split()
+
+
+def text_field(entry, key, default=None):
+    """A string field of a manifest row, or a ValueError naming the row."""
+    value = entry.get(key, default)
+    if not isinstance(value, str):
+        raise ValueError(f"{entry.get('name')!r}: {key} is not a string")
+    return value
 
 
 def row(entry):
     """One manifest row as the table needs it, whichever schema wrote it."""
-    status = STATUSES.get(entry.get("status"))
+    if not isinstance(entry, dict):
+        raise ValueError(f"a repositories entry is not an object: {entry!r}")
+    name = text_field(entry, "name")
+    status = entry.get("status")
+    status = STATUSES.get(status) if isinstance(status, str) else None
     if status is None:
-        raise ValueError(f"{entry.get('name')}: unknown status {entry.get('status')!r}")
-    name = entry["name"]
-    repository = entry.get("repository") or SCHEMA_1_REPOSITORIES.get(name, name)
+        raise ValueError(f"{name}: unknown status {entry.get('status')!r}")
+    repository = text_field(entry, "repository", "") or SCHEMA_1_REPOSITORIES.get(name, name)
+    # The repository becomes part of an href: a GitHub repository name, and
+    # nothing that could leave the attribute or the account's path.
+    if not REPOSITORY.fullmatch(repository) or repository in (".", ".."):
+        raise ValueError(f"{name}: repository {repository!r} is not a repository name")
     return {
         "name": name,
         "url": f"{REPO}/{repository}",
         "status": status,
-        "role": entry.get("role", ""),
+        "role": text_field(entry, "role", ""),
     }
 
 
 def load(text):
     """The manifest's schema version and its rows, normalised."""
-    manifest = json.loads(text)
+    try:
+        manifest = json.loads(text)
+    except RecursionError:
+        raise ValueError("the manifest is nested too deeply to read") from None
+    if not isinstance(manifest, dict):
+        raise ValueError("the manifest is not a JSON object")
     schema = manifest.get("schema_version")
     if schema not in SCHEMAS:
         raise ValueError(f"unsupported ecosystem.json schema_version {schema!r}; this reads {SCHEMAS}")
-    return schema, [row(e) for e in manifest["repositories"]]
+    repositories = manifest.get("repositories")
+    if not isinstance(repositories, list):
+        raise ValueError("the manifest has no repositories list")
+    return schema, [row(e) for e in repositories]
 
 
 def status_cell(r, version):
