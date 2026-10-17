@@ -7,6 +7,50 @@ All notable changes to satellion.com are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions move by
 0.0.1 a release, as across the passmcp family.
 
+## [Unreleased]
+
+Work towards the family's 0.0.8. Version places stay at 0.0.7 until the
+family's release step.
+
+### Added
+
+- **`family.py` is fuzzed.** `scripts/fuzz_family.py` feeds Atheris's
+  inputs to it as passmcp's `ecosystem.json` and fails on a crash or on
+  any markup the family table never writes: an element or attribute
+  outside the table's own, or a link outside the account on GitHub.
+  `make fuzz` runs it, and CI's new fuzz job runs it for two minutes on
+  every change, with Atheris installed hash-locked from
+  `scripts/fuzz-requirements.txt`. `scripts/test_fuzz_family.py` runs the
+  same check over its seeds on any machine.
+
+- **The site's main stylesheet is held to Skeletonic Stylus 3.0.0.**
+  `scripts/test_skeletonic.py` fails unless `_layouts/skeletonic.min.css`
+  is byte for byte the 3.0.0 core the SSG theme suite pins, and both page
+  shells load it before `styles.css`.
+
+### Fixed
+
+- **A manifest's repository can no longer add markup to the site.** The
+  repository went into the family table's links unescaped, so a value
+  with a quote in it added attributes; it must now be a repository name.
+  The site's Content-Security-Policy already blocked inline handlers, and
+  the manifest is passmcp's own, so nothing reached a visitor.
+- **A malformed manifest is refused, not crashed on.** A manifest that
+  was not an object, had no `repositories` list, had a row without a
+  string name, role or status, or was nested past Python's recursion
+  limit stopped `family.py` with a traceback instead of the
+  `family: <file>: <reason>` exit it promises.
+
+### Removed
+
+- **The live passmcp-graph demo.** satellion.com's Content-Security-Policy
+  header allows no inline script or style, and passmcp-graph 0.0.7's
+  dashboard is a single file that needs both, so `/passmcp-graph/demo/`
+  rendered without its styles or behaviour. The page is no longer
+  published or linked; passmcp's page keeps the still of it. It returns
+  once passmcp-graph can write the dashboard with its script and styles
+  as separate files.
+
 ## [0.0.7] - 2026-10-17
 
 0.0.5 was never tagged; its changes ship in this release, at the family's
