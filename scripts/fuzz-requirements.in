@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# Atheris, for scripts/fuzz_family.py. Kept out of requirements.txt because
+# it ships wheels for Linux on x86-64 only, where CI's fuzz job runs; the
+# tests' environment installs on any machine.
+# Regenerate the hash-locked scripts/fuzz-requirements.txt with:
+#   uv pip compile --generate-hashes --python-version 3.12 --python-platform x86_64-manylinux_2_17 scripts/fuzz-requirements.in -o scripts/fuzz-requirements.txt
+atheris

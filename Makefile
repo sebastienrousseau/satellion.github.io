@@ -7,7 +7,7 @@
 # release: the sample report is passmcp run against its fixture server, the
 # manual is passmcp's docs/, and the page's numbers come from that report.
 
-.PHONY: all core site passmcp sample data check-data family check-family manual graph graph-demo graph-shot test coverage coverage-publish verify-versions readme-check lint complexity check serve clean help name-guard demo build
+.PHONY: all core site passmcp sample data check-data family check-family manual graph graph-demo graph-shot fuzz test coverage coverage-publish verify-versions readme-check lint complexity check serve clean help name-guard demo build
 
 build: core
 
@@ -93,6 +93,14 @@ family: passmcp
 
 check-family: passmcp
 	python3 scripts/family.py $(FAMILY_MANIFEST) _layouts/family.html $(PASSMCP_REF) --check
+
+# Fuzz family.py, which writes passmcp's ecosystem.json into the site's
+# markup, with Atheris for FUZZ_TIME seconds (scripts/fuzz_family.py says
+# what counts as a finding). Atheris has wheels for Linux on x86-64 only;
+# CI's fuzz job runs this. The corpus persists under .build between runs.
+FUZZ_TIME ?= 120
+fuzz:
+	python3 scripts/fuzz_family.py $(WORK)/fuzz-corpus/family -max_total_time=$(FUZZ_TIME)
 
 # The site's own scripts' tests (python3's unittest; no dependencies).
 test:
