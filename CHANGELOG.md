@@ -7,7 +7,7 @@ All notable changes to satellion.com are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions move by
 0.0.1 a release, as across the passmcp family.
 
-## [0.0.7] - Unreleased
+## [0.0.7] - 2026-10-17
 
 0.0.5 was never tagged; its changes ship in this release, at the family's
 version.
