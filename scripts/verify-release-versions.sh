@@ -63,7 +63,7 @@ if [ -z "${ssg}" ]; then
 else
   ssg_refs=$(grep -rEoH '(SSG|ssg)( \| exactly | --locked --version |[ -])[0-9]+\.[0-9]+\.[0-9]+' \
     Makefile README.md CONTRIBUTING.md DEVELOPMENT.md AGENTS.md docs/ARCHITECTURE.md REUSE.toml \
-    .github/workflows || true)
+    .github/workflows graph-demo || true)
   for f in .github/workflows/ci.yml .github/workflows/pages.yml DEVELOPMENT.md README.md; do
     grep -q "^${f}:" <<<"${ssg_refs}" || bad "${f} names no SSG version to check"
   done

@@ -43,6 +43,7 @@ CI job; the command reproduces it locally.
 | The core pages build | `make core` | `ci.yml`, `pages.yml` |
 | SSG's quality gate passes every pillar, its accessibility report is empty and `manifest.json` has no null field | `make core` (runs `scripts/quality_gate.py dist`) | `ci.yml`, `pages.yml` |
 | Every page carries `_layouts/csp.html`'s policy and needs nothing it blocks, and no edge header file ships | `make core` (runs `scripts/strict_csp.py dist`) | `ci.yml`, `pages.yml` |
+| The passmcp-graph demo builds and passes both checks | `make graph-site` | `pages.yml` (through `make site`) |
 | passmcp's sample report needs nothing the policy header blocks, from passmcp `SAMPLE_CSP_FROM` on | `make check-sample-csp` | `pages.yml` (through `make site`) |
 | The full site builds against a passmcp release | `make site` | `pages.yml` |
 | The product page's numbers match the release | `make check-data` | `pages.yml` on pull requests |

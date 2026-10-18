@@ -32,6 +32,23 @@ precedence = "override"
 SPDX-FileCopyrightText = "2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>"
 SPDX-License-Identifier = "GPL-3.0-only"
 
+# The passmcp-graph demo's layouts are vendored from the Control Centre
+# theme in the SSG theme suite: themes/control-centre/_layouts/ of
+# github.com/sebastienrousseau/ssg-themes.github.io, whose theme.json and
+# theme.toml declare MIT. Copied on 2026-10-18 from a working tree at
+# commit 22b5dbbaa63c02e0b3c8b7a1cb630664e9f99c7c, where the theme was not
+# yet committed; scripts/test_graph_demo.py pins the unchanged files to
+# that copy by SHA-256. base.html (the site's CSP partial, the og:image
+# fields, no feed links), header.html (one locale, links to satellion's
+# pages), footer.html (the owner's copyright line, no example address)
+# and index.html (places the export leaves empty are left out) are
+# adapted; their headers say so where the change is not obvious.
+[[annotations]]
+path = ["graph-demo/_layouts/**"]
+precedence = "override"
+SPDX-FileCopyrightText = "2024 - 2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>"
+SPDX-License-Identifier = "MIT"
+
 # passmcp's icons, copied from passmcp's brand/ at the release the site is
 # built against, under passmcp's licence.
 [[annotations]]

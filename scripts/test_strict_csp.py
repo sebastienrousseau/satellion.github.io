@@ -2,9 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Every page carries the site's one policy and needs nothing it blocks.
 
-strict_csp.py runs over the built site in `make core`. These tests hold
-its rules, and hold the layouts to the single policy in
-_layouts/csp.html: the site's own origin only. The site runs no analytics, so the policy names no other
+strict_csp.py runs over the built site in `make core` and over the
+passmcp-graph demo in `make graph-site`. These tests hold its rules, and
+hold the layouts to the single policy in _layouts/csp.html: the site's own
+origin only. The site runs no analytics, so the policy names no other
 origin and blocks a beacon an edge proxy injects.
 Run: python3 -m unittest discover -s scripts
 """
@@ -25,6 +26,7 @@ PARTIAL = ROOT / "_layouts" / "csp.html"
 SHELLS = (
     ROOT / "_layouts" / "base.html",
     ROOT / "_layouts" / "base-company.html",
+    ROOT / "graph-demo" / "_layouts" / "base.html",
 )
 META = re.compile(r'<meta http-equiv="Content-Security-Policy" content="([^"]*)"')
 # The policy, written out here rather than read from strict_csp.POLICY, so
