@@ -28,6 +28,49 @@ family's release step.
   is byte for byte the 3.0.0 core the SSG theme suite pins, and both page
   shells load it before `styles.css`.
 
+- **The live passmcp-graph demo is back, built by SSG.**
+  `/passmcp-graph/demo/` is passmcp-graph's published fixture graph,
+  exported with `passmcp-graph dashboard --share-safe --format json` and
+  written by the new `scripts/graph_demo.py` into the Control Centre
+  theme's overview page: clients, servers and their status around a ring,
+  four key figures, the findings and evidence gaps, and the query that
+  shows each one's evidence. `make graph-site` builds it with SSG into a
+  directory of its own and `make site` publishes it; the generator refuses
+  an export that is not share-safe. The theme's layouts are vendored, MIT,
+  in `graph-demo/_layouts/`, with their source recorded in `REUSE.toml`.
+  passmcp's page and passmcp-graph's page link the demo again.
+- **Every built page is held to the site's policy.**
+  `scripts/strict_csp.py` runs in `make core` and `make graph-site` and
+  fails on a page without the site's one Content-Security-Policy, or with
+  an inline script, style element, style or event-handler attribute, or
+  an asset from another origin.
+
+- **ruff lints and formats the build's scripts.** `make ruff` runs
+  `ruff check` and `ruff format --check` over `scripts/` with `ruff.toml`,
+  at the version `scripts/requirements.txt` locks, and CI runs it. The
+  existing findings are fixed at their causes: `family.py` raises its own
+  `ManifestError` (still a `ValueError`) for a malformed manifest, and
+  `security_txt.py` leaves RFC 3339's Z suffix to Python's own parser.
+- **The SSG pin is checked.** `make verify-versions` fails when the
+  README, the contributor docs, `AGENTS.md`, the architecture document or
+  a workflow names an SSG version other than the Makefile's
+  `SSG_VERSION`.
+- **passmcp's sample report is held to the policy once passmcp can meet
+  it.** `make check-sample-csp`, part of `make site`, fails a sample
+  report that needs an inline style or script, from passmcp
+  `SAMPLE_CSP_FROM` (0.0.8) on. passmcp 0.0.7's report inlines its
+  styles, so it renders unstyled under the site's header; the fix belongs
+  in passmcp's generator, not in a rewrite here.
+
+### Changed
+
+- **SSG 0.0.68.** The Makefile, both workflows and the docs move from
+  0.0.66 to 0.0.68. Its minifier keeps the spaces inside string literals that 0.0.66 dropped,
+  so `graph-demo/_layouts/main.js` is now the Control Centre theme's file
+  byte for byte, pinned by SHA-256 like the other unchanged files. 0.0.68
+  still links `/highlight.css` by its plain name, so the copy of the
+  fingerprinted file stays.
+
 ### Fixed
 
 - **A manifest's repository can no longer add markup to the site.** The
@@ -35,21 +78,45 @@ family's release step.
   with a quote in it added attributes; it must now be a repository name.
   The site's Content-Security-Policy already blocked inline handlers, and
   the manifest is passmcp's own, so nothing reached a visitor.
+- **One page policy, own origin only.** Every page's
+  Content-Security-Policy is written once, in `_layouts/csp.html`, which
+  both page shells and the passmcp-graph demo include, instead of in each
+  shell; `form-action` no longer names `'self'` twice. It allows scripts,
+  styles and connections from the site's own origin only, so it blocks
+  third-party scripts, analytics an edge proxy injects (Cloudflare's Web
+  Analytics beacon) included: the site runs no analytics.
+- **The docs name the SSG the build uses.** `DEVELOPMENT.md`, the
+  README, `CONTRIBUTING.md`, `AGENTS.md` and the architecture document
+  said SSG 0.0.63; the Makefile and CI pin 0.0.68.
+- **The web app manifest has no null field.** SSG fills `theme_color`
+  from a `theme-color` front matter key, so the pages' `theme_colour` key
+  is now `theme-color` and feeds both the manifest and the
+  `<meta name="theme-color">` tag; the demo sets `short_name` too.
+  `scripts/quality_gate.py` fails a build whose `manifest.json` has a
+  null field.
+- **No stale header file ships.** SSG's `[edge_headers]` wrote a Netlify
+  `_headers` and Cloudflare Workers headers with SSG's default policy,
+  not the site's. The site is served from GitHub Pages behind Cloudflare,
+  which applies neither, so they are no longer written, and
+  `scripts/strict_csp.py` fails a build that ships one.
+- **Each page's footer names its own project.** The footers linked
+  passmcp's source, issues and security policy, and said "passmcp is
+  released under GPL-3.0-only", on every page, including passmcp-lsp's
+  (Apache-2.0) and passmcp-registry's (AGPL-3.0-only). Each page now sets
+  `footer_repo` and `footer_license` in its front matter, from that
+  repository's licence; the format pages name passmcp-reporting, where the
+  formats are published, and the company page names this repository.
+  `scripts/footer_links.py`, run in `make core`, fails a page whose
+  footer links another repository's source or security policy.
+- **Contributors are asked for a failing test.** `CONTRIBUTING.md` and
+  the pull request template say new or changed behaviour comes with a
+  test in `scripts/test_<name>.py` that fails without it, held by the 85%
+  coverage gate.
 - **A malformed manifest is refused, not crashed on.** A manifest that
   was not an object, had no `repositories` list, had a row without a
   string name, role or status, or was nested past Python's recursion
   limit stopped `family.py` with a traceback instead of the
   `family: <file>: <reason>` exit it promises.
-
-### Removed
-
-- **The live passmcp-graph demo.** satellion.com's Content-Security-Policy
-  header allows no inline script or style, and passmcp-graph 0.0.7's
-  dashboard is a single file that needs both, so `/passmcp-graph/demo/`
-  rendered without its styles or behaviour. The page is no longer
-  published or linked; passmcp's page keeps the still of it. It returns
-  once passmcp-graph can write the dashboard with its script and styles
-  as separate files.
 
 ## [0.0.7] - 2026-10-17
 
