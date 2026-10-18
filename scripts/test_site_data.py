@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-only
 """Tests for site_data.py. Run: python3 -m unittest discover -s scripts"""
+
 import contextlib
 import io
 import json
@@ -15,7 +16,13 @@ import site_data
 
 
 def finding(fid, status, evidence=None):
-    return {"id": fid, "title": f"{fid} title", "detail": f'{fid} said "no"', "status": status, "evidence": evidence or []}
+    return {
+        "id": fid,
+        "title": f"{fid} title",
+        "detail": f'{fid} said "no"',
+        "status": status,
+        "evidence": evidence or [],
+    }
 
 
 def report(cited=2):

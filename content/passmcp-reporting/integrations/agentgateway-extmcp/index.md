@@ -11,10 +11,11 @@ language: "en-GB"
 schema: "page"
 changefreq: "monthly"
 copyright_year: "2026"
-form_origin: "'self'"
 theme_style: "style-satellion"
-theme_colour: "#214186"
+theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
+footer_repo: "passmcp-reporting"
+footer_license: "The processor is part of passmcp-reporting, released under Apache-2.0."
 # A nested module of passmcp-reporting: Go fetches this path, maps it to the
 # repository root below, and reads the tags prefixed
 # integrations/agentgateway-extmcp/ (integrations/agentgateway-extmcp/v0.0.7),

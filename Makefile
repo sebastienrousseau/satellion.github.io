@@ -7,7 +7,7 @@
 # release: the sample report is passmcp run against its fixture server, the
 # manual is passmcp's docs/, and the page's numbers come from that report.
 
-.PHONY: all core site passmcp sample data check-data family check-family manual graph graph-demo graph-shot test coverage coverage-publish verify-versions readme-check lint complexity check serve clean help name-guard demo build
+.PHONY: all core site passmcp sample data check-data check-sample-csp family check-family manual graph graph-demo graph-shot graph-export graph-site fuzz test coverage coverage-publish verify-versions readme-check lint ruff complexity check serve clean help name-guard demo build
 
 build: core
 
@@ -17,7 +17,9 @@ PASSMCP_REF  ?= $(shell git ls-remote --tags --refs --sort=-v:refname $(PASSMCP_
 PASSMCP_GRAPH_REPO ?= https://github.com/sebastienrousseau/passmcp-graph
 # The latest release tag unless one is named: make site PASSMCP_GRAPH_REF=v0.0.7
 PASSMCP_GRAPH_REF  ?= $(shell git ls-remote --tags --refs --sort=-v:refname $(PASSMCP_GRAPH_REPO) 'v*' | head -n1 | sed 's|.*refs/tags/||')
-SSG_VERSION ?= 0.0.66
+SSG_VERSION ?= 0.0.68
+# Every SSG build refuses any other version.
+SSG_PIN = v=$$(ssg --version 2>/dev/null | awk '{print $$2}'); [ "$$v" = "$(SSG_VERSION)" ] || { echo "ssg $(SSG_VERSION) required, found '$$v'" >&2; exit 1; }
 WORK := .build
 DIST := dist
 # The tests' own virtual environment: coverage.py, hash-locked.
@@ -42,6 +44,21 @@ sample: passmcp
 	rm -rf $(WORK)/sample
 	cd $(WORK)/passmcp && go run ./scripts/samplereport/main.go ../passmcp-bin ../sample
 
+# The sample report is served under the site's Content-Security-Policy
+# header, which blocks inline style and script. passmcp's own generator
+# writes it, so the site checks it rather than rewrite it: from the passmcp
+# release SAMPLE_CSP_FROM on, a sample report that needs anything the
+# header blocks fails the build. Releases before it inline their styles,
+# and are let through with a note. SAMPLE_CSP_FROM names the first release
+# expected to carry passmcp's fix; move it if that fix ships later.
+SAMPLE_CSP_FROM ?= 0.0.8
+check-sample-csp: sample
+	@if [ "$$(printf '%s\n' "$(SAMPLE_CSP_FROM)" "$(PASSMCP_REF:v%=%)" | sort -V | head -n1)" = "$(SAMPLE_CSP_FROM)" ]; then \
+	  python3 scripts/strict_csp.py --header-only $(WORK)/sample; \
+	else \
+	  echo "check-sample-csp: passmcp $(PASSMCP_REF) is before $(SAMPLE_CSP_FROM); its sample report is not held to the policy yet"; \
+	fi
+
 # The page's score, grade, counts and ledger, from that report.
 data: sample
 	python3 scripts/site_data.py $(WORK)/sample/report.json content/passmcp/index.md $(WORK)/passmcp/docs/checks.md
@@ -56,15 +73,48 @@ graph:
 	  rm -rf $(WORK)/passmcp-graph; \
 	  git clone --quiet --depth 1 --branch $(PASSMCP_GRAPH_REF) $(PASSMCP_GRAPH_REPO) $(WORK)/passmcp-graph; \
 	fi
-	cd $(WORK)/passmcp-graph && go build -o ../passmcp-graph-bin ./cmd/passmcp-graph
+	cd $(WORK)/passmcp-graph && go build -ldflags "-X satellion.com/passmcp-graph/internal/cli.Version=$(PASSMCP_GRAPH_REF:v%=%)" -o ../passmcp-graph-bin ./cmd/passmcp-graph
 
 # passmcp-graph's dashboard of its own published fixture graph, the same
-# graph its README demo and tests use, rendered share-safe. It is one
-# self-contained HTML page that loads nothing, served at /passmcp-graph/demo/.
+# graph its README demo and tests use, rendered share-safe: the page that
+# images/graph-dashboard*.webp is taken from. This page itself is not
+# published: the site's Content-Security-Policy allows no inline script or
+# style, which the single-file dashboard of passmcp-graph 0.0.7 needs.
+# graph-site builds the published demo from the same graph instead.
 graph-demo: graph
 	rm -rf $(WORK)/graph-store $(WORK)/graph-demo && mkdir -p $(WORK)/graph-demo
 	$(WORK)/passmcp-graph-bin --store $(WORK)/graph-store import $(WORK)/passmcp-graph/testdata/fixture/graph.json
 	$(WORK)/passmcp-graph-bin --store $(WORK)/graph-store dashboard --share-safe --out $(WORK)/graph-demo/index.html
+
+# The same fixture graph as passmcp-graph's share-safe JSON export: the
+# dashboard's summary after the share-safe profile has replaced endpoints,
+# identities and configuration paths with placeholders. The demo page is
+# written from it and nothing else.
+graph-export: graph
+	rm -rf $(WORK)/graph-export-store $(WORK)/graph-export.json
+	$(WORK)/passmcp-graph-bin --store $(WORK)/graph-export-store import $(WORK)/passmcp-graph/testdata/fixture/graph.json
+	$(WORK)/passmcp-graph-bin --store $(WORK)/graph-export-store dashboard --share-safe --format json --out $(WORK)/graph-export.json
+
+# The live demo at /passmcp-graph/demo/: scripts/graph_demo.py writes the
+# export as the Control Centre theme's overview page, and SSG builds it
+# with graph-demo/ssg.toml into a directory of its own, because SSG wipes
+# its output directory and dist/ is the main build's. It must pass SSG's
+# quality gate and run under the site's Content-Security-Policy
+# (_layouts/csp.html), which allows no inline script or style. site
+# copies it into dist/.
+graph-site: graph-export
+	@$(SSG_PIN)
+	# The theme's layouts with the site's one Content-Security-Policy.
+	rm -rf $(WORK)/graph-demo-content $(WORK)/graph-demo-layouts && mkdir -p $(WORK)/graph-demo-layouts
+	cp graph-demo/_layouts/* _layouts/csp.html $(WORK)/graph-demo-layouts/
+	python3 scripts/graph_demo.py $(WORK)/graph-export.json $(WORK)/graph-demo-content/index.md $(PASSMCP_GRAPH_REF)
+	ssg build -f graph-demo/ssg.toml
+	cp brand/satellion/favicon.ico $(WORK)/graph-demo-site/favicon.ico
+	# What only a site's root means is the main build's to publish.
+	rm -rf $(WORK)/graph-demo-site/CNAME $(WORK)/graph-demo-site/robots.txt \
+	  $(WORK)/graph-demo-site/security.txt $(WORK)/graph-demo-site/sitemap.xml $(WORK)/graph-demo-site/news-sitemap.xml
+	python3 scripts/quality_gate.py $(WORK)/graph-demo-site
+	python3 scripts/strict_csp.py $(WORK)/graph-demo-site
 
 # images/graph-dashboard*.webp, the still of that demo on passmcp's page:
 # headless Chrome at 1440x900 in dark mode, then cwebp at three widths.
@@ -93,6 +143,14 @@ family: passmcp
 
 check-family: passmcp
 	python3 scripts/family.py $(FAMILY_MANIFEST) _layouts/family.html $(PASSMCP_REF) --check
+
+# Fuzz family.py, which writes passmcp's ecosystem.json into the site's
+# markup, with Atheris for FUZZ_TIME seconds (scripts/fuzz_family.py says
+# what counts as a finding). Atheris has wheels for Linux on x86-64 only;
+# CI's fuzz job runs this. The corpus persists under .build between runs.
+FUZZ_TIME ?= 120
+fuzz:
+	python3 scripts/fuzz_family.py $(WORK)/fuzz-corpus/family -max_total_time=$(FUZZ_TIME)
 
 # The site's own scripts' tests (python3's unittest; no dependencies).
 test:
@@ -124,6 +182,12 @@ complexity: $(TESTENV)/.installed
 	$(TESTENV)/bin/xenon --max-absolute B --max-modules B --max-average A scripts
 	$(TESTENV)/bin/complexipy scripts --max-complexity-allowed 15 --quiet
 
+# ruff over the build's scripts: its lint rules and its formatter
+# (ruff.toml), at the version scripts/requirements.txt locks.
+ruff: $(TESTENV)/.installed
+	$(TESTENV)/bin/ruff check scripts
+	$(TESTENV)/bin/ruff format --check scripts
+
 # Every version reference names the newest CHANGELOG release.
 verify-versions:
 	scripts/verify-release-versions.sh
@@ -137,7 +201,7 @@ lint: readme-check name-guard
 	npx --yes markdownlint-cli2@0.18.1
 
 # Everything CI checks that needs no passmcp release.
-check: lint complexity verify-versions coverage core
+check: lint ruff complexity verify-versions coverage core
 
 manual: passmcp
 	python3 -m venv $(WORK)/venv
@@ -152,7 +216,7 @@ manual: passmcp
 # both icon sets and security.txt. It is what deploys before the first
 # release exists, because Go needs the module pages to fetch that release.
 core:
-	@v=$$(ssg --version 2>/dev/null | awk '{print $$2}'); [ "$$v" = "$(SSG_VERSION)" ] || { echo "ssg $(SSG_VERSION) required, found '$$v'" >&2; exit 1; }
+	@$(SSG_PIN)
 	ssg build -f ssg.toml
 	# SSG renders pages and templates; static files are copied after it,
 	# because it wipes its output directory on every build.
@@ -161,7 +225,7 @@ core:
 	mkdir -p $(DIST)/brand && cp -R brand/satellion $(DIST)/brand/
 	cp brand/satellion/favicon.ico brand/satellion/favicon.svg brand/satellion/apple-touch-icon.png $(DIST)/
 	mkdir -p $(DIST)/passmcp && cp brand/passmcp/* $(DIST)/passmcp/
-	# SSG 0.0.63 links /highlight.css but writes it fingerprinted; publish
+	# SSG 0.0.68 links /highlight.css but writes it fingerprinted; publish
 	# it under the linked name too until SSG rewrites that link itself.
 	for f in $(DIST)/highlight.*.css; do [ -e "$$f" ] && cp "$$f" $(DIST)/highlight.css; done
 	# security.txt (RFC 9116), from content/index.md's security_* keys. SSG
@@ -173,15 +237,21 @@ core:
 	# SSG audits every build (ten quality pillars, WCAG 2.2 per page) but
 	# only logs what it finds; the build fails on any finding instead.
 	python3 scripts/quality_gate.py $(DIST)
+	# Every page carries the site's one Content-Security-Policy and needs
+	# nothing it blocks: no inline script or style, nothing off-site.
+	python3 scripts/strict_csp.py $(DIST)
+	# Every footer links the source and security policy of the repository
+	# its page is about.
+	python3 scripts/footer_links.py $(DIST)
 	echo satellion.com > $(DIST)/CNAME
 	@echo "core: built $(DIST)"
 
 # site is core plus what comes from the passmcp release: the numbers on the
 # product page, the family table, the manual and the sample report; and,
 # from the passmcp-graph release, the dashboard demo.
-site: data family manual graph-demo core
+site: data family manual check-sample-csp graph-site core
 	cp -R $(WORK)/manual $(DIST)/passmcp/docs
-	mkdir -p $(DIST)/passmcp-graph/demo && cp $(WORK)/graph-demo/index.html $(DIST)/passmcp-graph/demo/index.html
+	mkdir -p $(DIST)/passmcp-graph/demo && cp -R $(WORK)/graph-demo-site/. $(DIST)/passmcp-graph/demo/
 	cp -R $(WORK)/sample $(DIST)/passmcp/sample
 	# Last, because it indexes the finished tree.
 	cd $(WORK)/passmcp && go run ./scripts/sitemap/main.go $(CURDIR)/$(DIST)

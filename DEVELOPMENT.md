@@ -12,7 +12,7 @@ build works is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 | Tool | Version | Needed for | Enforced by |
 |---|---|---|---|
 | Python | 3.12 or later | `make test`, `make coverage`, `make core` | `ci.yml` and `pages.yml` run 3.12 |
-| SSG | exactly 0.0.63 | `make core`, `make site` | the Makefile's `core` target refuses any other version |
+| SSG | exactly 0.0.68 | `make core`, `make site` | the Makefile's `core` target refuses any other version |
 | Go | stable | `make site` (builds passmcp) | `pages.yml` |
 | git, network access to GitHub | any | `make site` (clones passmcp at a release) | `pages.yml` |
 | Node.js (`npx`), codespell | any | `make lint` | `docs-lint.yml` |
@@ -21,11 +21,11 @@ build works is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 Install SSG with Cargo:
 
 ```sh
-cargo install ssg --locked --version 0.0.63
+cargo install ssg --locked --version 0.0.68
 ```
 
-`make coverage` and `make complexity` create `.build/venv-test` and install
-coverage.py, xenon and complexipy from the hash-locked
+`make coverage`, `make complexity` and `make ruff` create `.build/venv-test` and install
+coverage.py, xenon, complexipy and ruff from the hash-locked
 `scripts/requirements.txt`; nothing is installed globally.
 
 ## Gates
@@ -38,9 +38,13 @@ CI job; the command reproduces it locally.
 | The scripts' tests | `make test` | `ci.yml`, `pages.yml` |
 | Coverage at 85% or more | `make coverage` | `ci.yml`, `pages.yml` |
 | Complexity: cyclomatic 10, cognitive 15 per function | `make complexity` | `ci.yml` |
-| Every version reference agrees | `make verify-versions` | `ci.yml` |
+| ruff lint and format (`ruff.toml`) | `make ruff` | `ci.yml` |
+| Every version reference agrees, the SSG pin included | `make verify-versions` | `ci.yml` |
 | The core pages build | `make core` | `ci.yml`, `pages.yml` |
-| SSG's quality gate passes every pillar, and its accessibility report is empty | `make core` (runs `scripts/quality_gate.py dist`) | `ci.yml`, `pages.yml` |
+| SSG's quality gate passes every pillar, its accessibility report is empty and `manifest.json` has no null field | `make core` (runs `scripts/quality_gate.py dist`) | `ci.yml`, `pages.yml` |
+| Every page carries `_layouts/csp.html`'s policy and needs nothing it blocks, and no edge header file ships | `make core` (runs `scripts/strict_csp.py dist`) | `ci.yml`, `pages.yml` |
+| The passmcp-graph demo builds and passes both checks | `make graph-site` | `pages.yml` (through `make site`) |
+| passmcp's sample report needs nothing the policy header blocks, from passmcp `SAMPLE_CSP_FROM` on | `make check-sample-csp` | `pages.yml` (through `make site`) |
 | The full site builds against a passmcp release | `make site` | `pages.yml` |
 | The product page's numbers match the release | `make check-data` | `pages.yml` on pull requests |
 | The family table matches the release's `ecosystem.json` | `make check-family` | `pages.yml` on pull requests |

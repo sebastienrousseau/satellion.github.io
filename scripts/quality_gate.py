@@ -11,12 +11,14 @@ they find as warnings and carries on, so a regression reaches the deployed
 site unless something reads them. This does: every pillar must pass and
 neither report may list an issue.
 """
+
 import json
 import sys
 from pathlib import Path
 
 QUALITY = "quality-gate-report.json"
 ACCESSIBILITY = "accessibility-report.json"
+MANIFEST = "manifest.json"
 
 
 def _is_real_issue(issue):
@@ -54,10 +56,23 @@ def accessibility_problems(report):
     ]
 
 
+def manifest_problems(manifest):
+    """Every field SSG wrote as null, which browsers ignore with a warning.
+
+    SSG fills short_name and theme_color from the front matter keys
+    short_name and theme-color; a page shell that omits one leaves it null.
+    """
+    return [f"manifest.json: {key} is null; set it in front matter" for key, value in manifest.items() if value is None]
+
+
 def problems(site):
     """Both reports' findings; a missing report is itself a finding."""
     out = []
-    for name, check in ((QUALITY, quality_problems), (ACCESSIBILITY, accessibility_problems)):
+    for name, check in (
+        (QUALITY, quality_problems),
+        (ACCESSIBILITY, accessibility_problems),
+        (MANIFEST, manifest_problems),
+    ):
         path = Path(site) / name
         if not path.is_file():
             out.append(f"{path}: missing; SSG writes it on every build")
@@ -72,7 +87,7 @@ def main(argv):
     found = problems(argv[1])
     if found:
         sys.exit("\n".join(found))
-    print(f"quality gate: every pillar passes and no accessibility issue in {argv[1]}")
+    print(f"quality gate: every pillar passes, no accessibility issue and no null manifest field in {argv[1]}")
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ brightgreen from 90, green from 85 (the gate), yellow from 70, red below.
 The percentage is truncated, not rounded, so 84.96% reads 84.9% and the
 badge never shows the gate as met when it is not.
 """
+
 import json
 import math
 import sys

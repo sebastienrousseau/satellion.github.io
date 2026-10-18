@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# The passmcp-graph demo at /passmcp-graph/demo/, a site of its own built
+# with the Control Centre theme (graph-demo/_layouts/, vendored from the
+# SSG theme suite). `make graph-site` writes its one page from
+# passmcp-graph's share-safe export into .build/graph-demo-content, gathers
+# those layouts and the site's _layouts/csp.html into
+# .build/graph-demo-layouts, and builds them into .build/graph-demo-site;
+# `make site` copies that into dist/ after the main build, because SSG
+# wipes its output directory. Paths are relative to the repository root,
+# where make runs.
+site_name = "passmcp-graph demo"
+site_title = "passmcp-graph demo: the fixture graph as a control centre"
+site_description = "passmcp-graph's published fixture graph, exported share-safe and built by SSG into a control-centre page."
+base_url = "https://satellion.com/passmcp-graph/demo/"
+language = "en-GB"
+
+content_dir = ".build/graph-demo-content"
+template_dir = ".build/graph-demo-layouts"
+output_dir = ".build/graph-demo-site"
+
+# No [edge_headers]: the site deploys to GitHub Pages behind Cloudflare,
+# which applies neither a Netlify _headers file nor SSG's wrangler headers,
+# and their policy is SSG's default, not _layouts/csp.html. The response
+# header is set in Cloudflare; scripts/strict_csp.py fails a build that
+# ships one of these files again.

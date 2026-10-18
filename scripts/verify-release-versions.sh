@@ -54,5 +54,23 @@ if stale=$(grep -v "=v${ver}\$" <<<"${refs}"); then
   bad "a PASSMCP_REF or PASSMCP_GRAPH_REF example names a release other than ${ver}: ${stale//$'\n'/, }"
 fi
 
+# SSG is pinned once, by the Makefile's SSG_VERSION; every install line,
+# badge and requirement that names an SSG version names that one. ADRs and
+# the changelog record history and are left out.
+ssg=$(sed -nE 's/^SSG_VERSION \?= ([0-9]+\.[0-9]+\.[0-9]+)$/\1/p' Makefile)
+if [ -z "${ssg}" ]; then
+  bad "the Makefile sets no SSG_VERSION"
+else
+  ssg_refs=$(grep -rEoH '(SSG|ssg)( \| exactly | --locked --version |[ -])[0-9]+\.[0-9]+\.[0-9]+' \
+    Makefile README.md CONTRIBUTING.md DEVELOPMENT.md AGENTS.md docs/ARCHITECTURE.md REUSE.toml \
+    .github/workflows graph-demo || true)
+  for f in .github/workflows/ci.yml .github/workflows/pages.yml DEVELOPMENT.md README.md; do
+    grep -q "^${f}:" <<<"${ssg_refs}" || bad "${f} names no SSG version to check"
+  done
+  if stale=$(grep -Ev "[^0-9.]${ssg//./\\.}\$" <<<"${ssg_refs}"); then
+    bad "an SSG version other than the Makefile's ${ssg}: ${stale//$'\n'/, }"
+  fi
+fi
+
 [ "${fail}" -eq 0 ] && echo "verify-release-versions: every version reference agrees on ${ver}"
 exit "${fail}"

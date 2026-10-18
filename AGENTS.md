@@ -19,7 +19,7 @@ equivalent of every CI gate. This file is only the constraints.
 | Tests, and coverage at 85% or more | `make test`, `make coverage` |
 | Complexity: cyclomatic 10, cognitive 15 | `make complexity` |
 | Every version reference agrees | `make verify-versions` |
-| The core pages build with SSG 0.0.63, SSG's quality gate at every pillar and no accessibility issue | `make core` |
+| The core pages build with SSG 0.0.68, SSG's quality gate at every pillar and no accessibility issue | `make core` |
 | README follows the portfolio template | `make readme-check` |
 | No retired product name | `make name-guard` |
 
@@ -54,9 +54,11 @@ equivalent of every CI gate. This file is only the constraints.
 - **`dist/` and `.build/` are not in the tree.** They are build output.
 - **`_layouts/family.html` is generated.** `make family` renders it from
   passmcp's `ecosystem.json`; change the manifest in passmcp, not the file.
-- **`_layouts/` is MIT, the rest GPL-3.0-only.** The layouts are vendored
-  from the SSG theme suite; `REUSE.toml` records it.
-- **`/highlight.css` is copied from a fingerprinted file.** SSG 0.0.63 links
+- **`_layouts/` and `graph-demo/_layouts/` are MIT, the rest
+  GPL-3.0-only.** The layouts are vendored from the SSG theme suite;
+  `REUSE.toml` records it. `_layouts/csp.html`, the site's one
+  Content-Security-Policy, is the site's own.
+- **`/highlight.css` is copied from a fingerprinted file.** SSG 0.0.68 links
   the plain name; the Makefile says why.
 - **The ecosystem table says every component is at 0.0.4.** That is the
   family's lockstep version, stated identically in every repository.

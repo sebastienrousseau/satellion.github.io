@@ -11,10 +11,11 @@ language: "en-GB"
 schema: "page"
 changefreq: "monthly"
 copyright_year: "2026"
-form_origin: "'self'"
 theme_style: "style-satellion"
-theme_colour: "#214186"
+theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
+footer_repo: "passmcp-graph"
+footer_license: "passmcp-graph is released under GPL-3.0-only."
 # Go resolves the module path satellion.com/passmcp-graph from these two tags.
 go_import: "satellion.com/passmcp-graph git https://github.com/sebastienrousseau/passmcp-graph"
 go_source: "satellion.com/passmcp-graph https://github.com/sebastienrousseau/passmcp-graph https://github.com/sebastienrousseau/passmcp-graph/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-graph/blob/main{/dir}/{file}#L{line}"
@@ -29,5 +30,5 @@ go install satellion.com/passmcp-graph/cmd/passmcp-graph@v0.0.7
 
 - Source: [github.com/sebastienrousseau/passmcp-graph](https://github.com/sebastienrousseau/passmcp-graph)
 - API documentation: [pkg.go.dev/satellion.com/passmcp-graph](https://pkg.go.dev/satellion.com/passmcp-graph)
-- Live demo: [the dashboard of passmcp-graph's fixture graph](/passmcp-graph/demo/), rendered share-safe by `passmcp-graph dashboard`
+- Live demo: [passmcp-graph's fixture graph as a control centre](/passmcp-graph/demo/), built by SSG from the share-safe JSON that `passmcp-graph dashboard --share-safe --format json` exports
 

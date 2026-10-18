@@ -6,6 +6,7 @@ Chrome is replaced by a stub that records its arguments and writes the
 screenshot, so the tests cover what cards.py hands the browser without
 needing one.
 """
+
 import contextlib
 import io
 import os

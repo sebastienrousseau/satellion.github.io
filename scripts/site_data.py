@@ -11,6 +11,7 @@ report disagree.
 
     python3 scripts/site_data.py <report.json> content/passmcp/index.md <docs/checks.md> [--check]
 """
+
 import json
 import re
 import sys
@@ -65,8 +66,7 @@ def evidence(phases):
     """Two findings as the evidence cards: failures that cite the request
     that showed them, first in report order."""
     cited = [
-        f for phase in phases for f in phase.get("findings") or []
-        if f.get("status") == "fail" and f.get("evidence")
+        f for phase in phases for f in phase.get("findings") or [] if f.get("status") == "fail" and f.get("evidence")
     ]
     if len(cited) < 2:
         sys.exit("site_data: the sample report has fewer than two cited failures to show")
@@ -151,7 +151,10 @@ def main(argv):
         return
     for path, new in stale.items():
         Path(path).write_text(new)
-    print(f"site_data: {count} checks and the sample report written into " + (", ".join(stale) if stale else "nothing (already current)"))
+    print(
+        f"site_data: {count} checks and the sample report written into "
+        + (", ".join(stale) if stale else "nothing (already current)")
+    )
 
 
 if __name__ == "__main__":

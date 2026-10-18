@@ -9,6 +9,7 @@ go-import, to learn where the source lives. A page missing it, or naming
 the wrong repository, breaks `go install` for everyone, and nothing else
 would notice until a user did. The build fails instead.
 """
+
 import sys
 from pathlib import Path
 

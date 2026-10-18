@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# ruff for the build's scripts, as `make ruff` and CI run it: the rules of
+# the ruff release scripts/requirements.txt locks, and its formatter. The
+# scripts are short and data-heavy, so lines run to 120 characters.
+line-length = 120
+target-version = "py312"

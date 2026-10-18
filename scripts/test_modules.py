@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-only
 """Tests for modules.py. Run: python3 -m unittest discover -s scripts"""
+
 import contextlib
 import io
 import sys
@@ -28,7 +29,9 @@ class Modules(unittest.TestCase):
     def test_a_missing_page_a_wrong_repository_and_a_duplicate_tag_fail(self):
         pages = {m: f"<head>{modules.expected(m)}</head>" for m in modules.MODULES}
         del pages["passmcp-graph"]
-        pages["passmcp-server"] = '<meta name="go-import" content="satellion.com/passmcp-server git https://github.com/someone/else" />'
+        pages["passmcp-server"] = (
+            '<meta name="go-import" content="satellion.com/passmcp-server git https://github.com/someone/else" />'
+        )
         pages["passmcp"] = pages["passmcp"] * 2
         found = "\n".join(modules.problems(site(pages)))
         self.assertIn("passmcp-graph: no page", found)

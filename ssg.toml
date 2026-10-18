@@ -26,5 +26,8 @@ ai_plugin = true
 [agents.mcp]
 enabled = true
 
-[edge_headers]
-targets = ["cloudflare", "netlify"]
+# No [edge_headers]: the site deploys to GitHub Pages behind Cloudflare,
+# which applies neither a Netlify _headers file nor SSG's wrangler headers,
+# and their policy is SSG's default, not _layouts/csp.html. The response
+# header is set in Cloudflare; scripts/strict_csp.py fails a build that
+# ships one of these files again.

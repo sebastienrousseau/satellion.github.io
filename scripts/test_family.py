@@ -10,6 +10,7 @@ It is rendered by family.py from passmcp's ecosystem.json, which is read
 in both of its schemas.
 Run: python3 -m unittest discover -s scripts
 """
+
 import contextlib
 import io
 import json
@@ -25,13 +26,15 @@ import modules
 
 ROOT = Path(__file__).parent.parent
 REPO = modules.REPO
-ROW = re.compile(r'<tr><th scope="row"><a href="([^"]+)" rel="noopener">([^<]+)</a></th><td>[^<]+</td><td>(.*?)</td></tr>')
+ROW = re.compile(
+    r'<tr><th scope="row"><a href="([^"]+)" rel="noopener">([^<]+)</a></th><td>[^<]+</td><td>(.*?)</td></tr>'
+)
 
 
 def readme_components():
     text = (ROOT / "README.md").read_text()
     section = text.split("## The satellion.com ecosystem", 1)[1].split("\n## ", 1)[0]
-    return re.findall(r"^\| \[([^\]]+)\]\((https://github\.com/[^)]+)\) \|", section, re.M)
+    return re.findall(r"^\| \[([^\]]+)\]\((https://github\.com/[^)]+)\) \|", section, re.MULTILINE)
 
 
 def site_rows():
@@ -79,19 +82,30 @@ def manifest(schema, rows):
     return json.dumps({"schema_version": schema, "family": "passmcp", "repositories": rows})
 
 
-SCHEMA_1 = manifest(1, [
-    {"name": "passmcp", "status": "shipping", "role": "The engine."},
-    {"name": "satellion.com", "status": "shipping", "role": "The site."},
-    {"name": "passmcp-lsp", "status": "planned", "role": "A language server."},
-    {"name": "passmcp-wasm", "status": "rejected", "role": "A browser build.", "rejected_because": "CORS."},
-])
-SCHEMA_2 = manifest(2, [
-    {"name": "passmcp", "repository": "passmcp", "status": "released", "role": "The engine."},
-    {"name": "satellion.com", "repository": "satellion.github.io", "status": "released", "role": "The site."},
-    {"name": "passmcp-lsp", "repository": "passmcp-lsp", "status": "unreleased", "role": "A language server."},
-    {"name": "passmcp-wasm", "repository": "passmcp-wasm", "status": "rejected", "role": "A browser build.",
-     "rejected_because": "CORS."},
-])
+SCHEMA_1 = manifest(
+    1,
+    [
+        {"name": "passmcp", "status": "shipping", "role": "The engine."},
+        {"name": "satellion.com", "status": "shipping", "role": "The site."},
+        {"name": "passmcp-lsp", "status": "planned", "role": "A language server."},
+        {"name": "passmcp-wasm", "status": "rejected", "role": "A browser build.", "rejected_because": "CORS."},
+    ],
+)
+SCHEMA_2 = manifest(
+    2,
+    [
+        {"name": "passmcp", "repository": "passmcp", "status": "released", "role": "The engine."},
+        {"name": "satellion.com", "repository": "satellion.github.io", "status": "released", "role": "The site."},
+        {"name": "passmcp-lsp", "repository": "passmcp-lsp", "status": "unreleased", "role": "A language server."},
+        {
+            "name": "passmcp-wasm",
+            "repository": "passmcp-wasm",
+            "status": "rejected",
+            "role": "A browser build.",
+            "rejected_because": "CORS.",
+        },
+    ],
+)
 
 
 class Render(unittest.TestCase):
@@ -127,8 +141,11 @@ class Render(unittest.TestCase):
         # second, identically labelled region inside it: one tab stop, one
         # announced landmark.
         out = family.render(*family.load(SCHEMA_2), "0.0.2")
-        self.assertIn('<div class="table-scroll ssg-table-scroll" role="region" '
-                      'aria-label="The passmcp family, scrollable horizontally" tabindex="0">', out)
+        self.assertIn(
+            '<div class="table-scroll ssg-table-scroll" role="region" '
+            'aria-label="The passmcp family, scrollable horizontally" tabindex="0">',
+            out,
+        )
         self.assertEqual(out.count('role="region"'), 1)
 
     def test_a_large_family_is_counted_in_digits(self):
@@ -146,6 +163,37 @@ class Render(unittest.TestCase):
             family.load(manifest(2, [{"name": "x", "status": "someday"}]))
         with self.assertRaisesRegex(ValueError, "unsupported ecosystem.json schema_version 3"):
             family.load(manifest(3, []))
+
+    def test_a_malformed_manifest_is_refused_not_crashed(self):
+        # Each of these crashed with AttributeError, KeyError or TypeError
+        # instead of the "family: <file>: <reason>" exit main promises.
+        for text in [
+            "[]",
+            '"x"',
+            json.dumps({"schema_version": 2}),
+            json.dumps({"schema_version": 2, "repositories": 5}),
+            manifest(2, ["passmcp"]),
+            manifest(2, [{"status": "released"}]),
+            manifest(2, [{"name": 7, "status": "released"}]),
+            manifest(2, [{"name": "x", "status": "released", "role": 3}]),
+            manifest(2, [{"name": "x", "status": ["released"]}]),
+        ]:
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                family.load(text)
+
+    def test_deeply_nested_json_is_refused_not_crashed(self):
+        # json.loads raises RecursionError, not ValueError, past Python's
+        # recursion limit.
+        with self.assertRaisesRegex(ValueError, "nested too deeply"):
+            family.load("[" * 100_000)
+
+    def test_a_repository_name_cannot_leave_its_link(self):
+        # The repository goes into an href; a quote in it would add
+        # attributes to the site's markup.
+        for repository in ['x" onmouseover="alert(1)', "../x", "x/y", "..", "a b"]:
+            rows = [{"name": "x", "repository": repository, "status": "released"}]
+            with self.subTest(repository=repository), self.assertRaisesRegex(ValueError, "x: repository"):
+                family.load(manifest(2, rows))
 
     def test_main_writes_then_checks_and_fails_on_drift(self):
         with tempfile.TemporaryDirectory() as d:

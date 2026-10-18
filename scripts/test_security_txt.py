@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-only
 """Tests for security_txt.py. Run: python3 -m unittest discover -s scripts"""
+
 import contextlib
 import datetime
 import io
@@ -12,7 +13,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import security_txt
 
-NOW = datetime.datetime(2026, 9, 27, tzinfo=datetime.timezone.utc)
+NOW = datetime.datetime(2026, 9, 27, tzinfo=datetime.UTC)
 GOOD = """# satellion.com
 Contact: https://github.com/sebastienrousseau/passmcp/security/advisories/new
 Expires: 2027-09-27T00:00:00Z
@@ -61,7 +62,7 @@ class SecurityTxt(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             good, bad = Path(d, "good.txt"), Path(d, "bad.txt")
             # main() reads the clock, so the file expires a year from now.
-            later = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=365)
+            later = datetime.datetime.now(datetime.UTC) + datetime.timedelta(days=365)
             fresh = GOOD.replace("2027-09-27T00:00:00Z", later.strftime("%Y-%m-%dT%H:%M:%SZ"))
             good.write_text(fresh)
             bad.write_text(fresh.replace("Contact:", "X:"))

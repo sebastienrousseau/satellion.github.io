@@ -48,11 +48,40 @@ jobs:
       - name: Coverage meets the gate
         run: make coverage
 
+      - name: ruff lint and format are clean
+        run: make ruff
+
       - name: Complexity stays under the ceilings
         run: make complexity
 
       - name: Every version reference agrees
         run: make verify-versions
+
+  # family.py writes another repository's text into the site's markup;
+  # fuzz it on every change. Atheris ships wheels for Linux on x86-64.
+  fuzz:
+    name: Fuzz the family table
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          show-progress: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Install Atheris, hash-locked
+        run: python3 -m pip install --disable-pip-version-check --require-hashes -r scripts/fuzz-requirements.txt
+
+      - name: family.py survives two minutes of fuzzing
+        run: make fuzz FUZZ_TIME=120
 
   core:
     name: Core build
@@ -75,7 +104,7 @@ jobs:
       # The Makefile refuses any other version, so the floor is enforced
       # where it is stated.
       - name: Install SSG
-        run: cargo install ssg --locked --version 0.0.66
+        run: cargo install ssg --locked --version 0.0.68
 
       - name: The pages that need no passmcp release build
         run: make core

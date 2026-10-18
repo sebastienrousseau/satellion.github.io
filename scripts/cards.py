@@ -9,6 +9,7 @@ which make data keeps in step with the release, so the card cannot keep a
 figure the product has outgrown. The PNGs are committed; run this after the
 count or the wording changes.
 """
+
 import re
 import subprocess
 import sys
@@ -20,7 +21,7 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 
 def count():
-    m = re.search(r'^metric_one_value: "(\d+)"$', (ROOT / "content/passmcp/index.md").read_text(), re.M)
+    m = re.search(r'^metric_one_value: "(\d+)"$', (ROOT / "content/passmcp/index.md").read_text(), re.MULTILINE)
     if not m:
         sys.exit("cards: content/passmcp/index.md has no metric_one_value")
     return m.group(1)
@@ -35,8 +36,20 @@ def render(chrome, name, values):
         page = Path(f.name)
     out = ROOT / "images" / f"{name}-card.png"
     try:
-        subprocess.run([chrome, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--allow-file-access-from-files",
-                        "--window-size=1200,630", f"--screenshot={out}", page.as_uri()], check=True, capture_output=True)
+        subprocess.run(
+            [
+                chrome,
+                "--headless=new",
+                "--disable-gpu",
+                "--hide-scrollbars",
+                "--allow-file-access-from-files",
+                "--window-size=1200,630",
+                f"--screenshot={out}",
+                page.as_uri(),
+            ],
+            check=True,
+            capture_output=True,
+        )
     finally:
         page.unlink()
     print(f"cards: wrote {out.relative_to(ROOT)}")
