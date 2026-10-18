@@ -10,8 +10,8 @@ Run: python3 -m unittest discover -s scripts
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
-from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).parent))
 import family
@@ -47,7 +47,7 @@ class Check(unittest.TestCase):
     def test_a_render_that_lets_markup_through_fails_the_check(self):
         leaky = '<a href="https://example.com/" rel="noopener">x</a>'
         with (
-            mock.patch.object(family, "render", return_value=leaky),
+            unittest.mock.patch.object(family, "render", return_value=leaky),
             self.assertRaisesRegex(AssertionError, "never writes"),
         ):
             fuzz_family.check(fuzz_family.SEEDS[0])
@@ -62,12 +62,15 @@ class Check(unittest.TestCase):
             self.assertEqual((corpus / "seed-0.json").read_bytes(), b"found")
 
     def test_main_without_a_corpus_prints_the_usage(self):
-        with mock.patch.dict(sys.modules, {"atheris": mock.MagicMock()}), self.assertRaisesRegex(SystemExit, "usage"):
+        with (
+            unittest.mock.patch.dict(sys.modules, {"atheris": unittest.mock.MagicMock()}),
+            self.assertRaisesRegex(SystemExit, "usage"),
+        ):
             fuzz_family.main(["fuzz_family.py"])
 
     def test_main_seeds_the_corpus_and_runs_atheris(self):
-        atheris = mock.MagicMock()
-        with tempfile.TemporaryDirectory() as d, mock.patch.dict(sys.modules, {"atheris": atheris}):
+        atheris = unittest.mock.MagicMock()
+        with tempfile.TemporaryDirectory() as d, unittest.mock.patch.dict(sys.modules, {"atheris": atheris}):
             fuzz_family.main(["fuzz_family.py", d, "-runs=1"])
             self.assertTrue(any(Path(d).iterdir()))
         atheris.instrument_all.assert_called_once()
