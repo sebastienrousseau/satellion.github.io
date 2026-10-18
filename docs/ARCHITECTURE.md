@@ -35,9 +35,9 @@ Makefile      Every build and gate target
 
 ## The build
 
-`make core` (ADR 0002) needs Python and SSG 0.0.63:
+`make core` (ADR 0002) needs Python and SSG 0.0.68:
 
-1. The Makefile refuses any SSG other than 0.0.63.
+1. The Makefile refuses any SSG other than 0.0.68.
 2. `ssg build -f ssg.toml` renders `content/` through `_layouts/` into `dist/`.
    SSG wipes `dist/` first, so static files are copied after it.
 3. `images/` and both icon sets are copied in.

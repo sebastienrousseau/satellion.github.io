@@ -17,7 +17,7 @@ PASSMCP_REF  ?= $(shell git ls-remote --tags --refs --sort=-v:refname $(PASSMCP_
 PASSMCP_GRAPH_REPO ?= https://github.com/sebastienrousseau/passmcp-graph
 # The latest release tag unless one is named: make site PASSMCP_GRAPH_REF=v0.0.7
 PASSMCP_GRAPH_REF  ?= $(shell git ls-remote --tags --refs --sort=-v:refname $(PASSMCP_GRAPH_REPO) 'v*' | head -n1 | sed 's|.*refs/tags/||')
-SSG_VERSION ?= 0.0.66
+SSG_VERSION ?= 0.0.68
 WORK := .build
 DIST := dist
 # The tests' own virtual environment: coverage.py, hash-locked.
@@ -171,7 +171,7 @@ core:
 	mkdir -p $(DIST)/brand && cp -R brand/satellion $(DIST)/brand/
 	cp brand/satellion/favicon.ico brand/satellion/favicon.svg brand/satellion/apple-touch-icon.png $(DIST)/
 	mkdir -p $(DIST)/passmcp && cp brand/passmcp/* $(DIST)/passmcp/
-	# SSG 0.0.63 links /highlight.css but writes it fingerprinted; publish
+	# SSG 0.0.68 links /highlight.css but writes it fingerprinted; publish
 	# it under the linked name too until SSG rewrites that link itself.
 	for f in $(DIST)/highlight.*.css; do [ -e "$$f" ] && cp "$$f" $(DIST)/highlight.css; done
 	# security.txt (RFC 9116), from content/index.md's security_* keys. SSG

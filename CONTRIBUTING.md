@@ -18,7 +18,7 @@ output, or a cited public source.**
 
 ```sh
 make check     # every gate that needs no passmcp release
-make site      # needs Go, Python 3.12+ and ssg 0.0.63 (cargo install ssg --locked --version 0.0.63)
+make site      # needs Go, Python 3.12+ and ssg 0.0.68 (cargo install ssg --locked --version 0.0.68)
 make serve     # then open http://localhost:8000
 ```
 

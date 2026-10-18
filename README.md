@@ -18,7 +18,7 @@
   <a href="https://satellion.com/"><img src="https://img.shields.io/badge/docs-manual-007d9c?style=for-the-badge&labelColor=555555&logo=readthedocs&logoColor=white" alt="Docs" /></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/sebastienrousseau/satellion.github.io"><img src="https://img.shields.io/ossf-scorecard/github.com/sebastienrousseau/satellion.github.io?style=for-the-badge&label=OpenSSF%20Scorecard&logo=openssf" alt="OpenSSF Scorecard" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--only-blue.svg?style=for-the-badge" alt="License: GPL-3.0-only" /></a>
-  <a href="https://github.com/sebastienrousseau/satellion.github.io/blob/main/DEVELOPMENT.md#requirements"><img src="https://img.shields.io/badge/ssg-0.0.63-93450a.svg?style=for-the-badge&logo=rust" alt="SSG 0.0.63" /></a>
+  <a href="https://github.com/sebastienrousseau/satellion.github.io/blob/main/DEVELOPMENT.md#requirements"><img src="https://img.shields.io/badge/ssg-0.0.68-93450a.svg?style=for-the-badge&logo=rust" alt="SSG 0.0.68" /></a>
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 **Getting started**
 
 - [Install](#install) — SSG and the repository
-- [Requirements](#requirements) — Python 3.12+, SSG 0.0.63, and Go for the full site
+- [Requirements](#requirements) — Python 3.12+, SSG 0.0.68, and Go for the full site
 - [Quick Start](#quick-start) — build and serve the site locally, with or without a passmcp release
 
 **The satellion.com ecosystem**
@@ -62,7 +62,7 @@
 ## Install
 
 ```sh
-cargo install ssg --locked --version 0.0.63
+cargo install ssg --locked --version 0.0.68
 git clone https://github.com/sebastienrousseau/satellion.github.io
 cd satellion.github.io
 ```
@@ -71,12 +71,12 @@ cd satellion.github.io
 
 ## Requirements
 
-`make core` needs Python 3.12 or later and exactly SSG 0.0.63; the Makefile
+`make core` needs Python 3.12 or later and exactly SSG 0.0.68; the Makefile
 refuses any other SSG version. `make site` also needs Go (stable), git and
 network access to GitHub: it clones passmcp at its latest release tag,
 builds it, and installs the manual's hash-locked requirements into a local
 virtual environment under `.build/`. `make coverage` installs coverage.py,
-hash-locked, into `.build/venv-test`. CI runs Python 3.12 and SSG 0.0.63;
+hash-locked, into `.build/venv-test`. CI runs Python 3.12 and SSG 0.0.68;
 [DEVELOPMENT.md](DEVELOPMENT.md#requirements) has the full table.
 
 ---
