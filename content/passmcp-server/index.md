@@ -14,6 +14,8 @@ copyright_year: "2026"
 theme_style: "style-satellion"
 theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
+footer_repo: "passmcp-server"
+footer_license: "passmcp-server is released under GPL-3.0-only."
 # Go resolves the module path satellion.com/passmcp-server from these two tags.
 go_import: "satellion.com/passmcp-server git https://github.com/sebastienrousseau/passmcp-server"
 go_source: "satellion.com/passmcp-server https://github.com/sebastienrousseau/passmcp-server https://github.com/sebastienrousseau/passmcp-server/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-server/blob/main{/dir}/{file}#L{line}"

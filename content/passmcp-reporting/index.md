@@ -14,6 +14,8 @@ copyright_year: "2026"
 theme_style: "style-satellion"
 theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
+footer_repo: "passmcp-reporting"
+footer_license: "passmcp-reporting is released under Apache-2.0."
 # Go resolves the module path satellion.com/passmcp-reporting from these two tags.
 go_import: "satellion.com/passmcp-reporting git https://github.com/sebastienrousseau/passmcp-reporting"
 go_source: "satellion.com/passmcp-reporting https://github.com/sebastienrousseau/passmcp-reporting https://github.com/sebastienrousseau/passmcp-reporting/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-reporting/blob/main{/dir}/{file}#L{line}"

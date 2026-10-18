@@ -14,6 +14,8 @@ copyright_year: "2026"
 theme_style: "style-satellion"
 theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
+footer_repo: "passmcp-lsp"
+footer_license: "passmcp-lsp is released under Apache-2.0."
 # Go resolves the module path satellion.com/passmcp-lsp from these two tags.
 go_import: "satellion.com/passmcp-lsp git https://github.com/sebastienrousseau/passmcp-lsp"
 go_source: "satellion.com/passmcp-lsp https://github.com/sebastienrousseau/passmcp-lsp https://github.com/sebastienrousseau/passmcp-lsp/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-lsp/blob/main{/dir}/{file}#L{line}"

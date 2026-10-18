@@ -14,6 +14,8 @@ copyright_year: "2026"
 theme_style: "style-satellion"
 theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
+footer_repo: "passmcp-registry"
+footer_license: "passmcp-registry's code is released under AGPL-3.0-only, and the scorecard it publishes under CC-BY-4.0."
 # Go resolves the module path satellion.com/passmcp-registry from these two tags.
 go_import: "satellion.com/passmcp-registry git https://github.com/sebastienrousseau/passmcp-registry"
 go_source: "satellion.com/passmcp-registry https://github.com/sebastienrousseau/passmcp-registry https://github.com/sebastienrousseau/passmcp-registry/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-registry/blob/main{/dir}/{file}#L{line}"

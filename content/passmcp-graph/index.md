@@ -14,6 +14,8 @@ copyright_year: "2026"
 theme_style: "style-satellion"
 theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
+footer_repo: "passmcp-graph"
+footer_license: "passmcp-graph is released under GPL-3.0-only."
 # Go resolves the module path satellion.com/passmcp-graph from these two tags.
 go_import: "satellion.com/passmcp-graph git https://github.com/sebastienrousseau/passmcp-graph"
 go_source: "satellion.com/passmcp-graph https://github.com/sebastienrousseau/passmcp-graph https://github.com/sebastienrousseau/passmcp-graph/tree/main{/dir} https://github.com/sebastienrousseau/passmcp-graph/blob/main{/dir}/{file}#L{line}"

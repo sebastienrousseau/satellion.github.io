@@ -16,11 +16,13 @@
     <div>
       <h2>Project</h2>
       <ul>
-        <li><a href="https://github.com/sebastienrousseau/passmcp" rel="noopener">Source on GitHub</a></li>
-        <li><a href="https://github.com/sebastienrousseau/passmcp/issues" rel="noopener">Report an issue</a></li>
-        <li><a href="https://github.com/sebastienrousseau/passmcp/blob/main/SECURITY.md" rel="noopener">Security policy</a></li>
+        <!-- The repository the page is about, from its front matter:
+             scripts/footer_links.py fails a build that links another. -->
+        <li><a href="https://github.com/sebastienrousseau/{{footer_repo}}" rel="noopener">Source on GitHub</a></li>
+        <li><a href="https://github.com/sebastienrousseau/{{footer_repo}}/issues" rel="noopener">Report an issue</a></li>
+        <li><a href="https://github.com/sebastienrousseau/{{footer_repo}}/blob/main/SECURITY.md" rel="noopener">Security policy</a></li>
       </ul>
-      <p class="fine-print">© {{copyright_year}} <a href="https://sebastienrousseau.com/" rel="author">Sebastien Rousseau</a>. passmcp is released under GPL-3.0-only, and is a <a href="{{site_path}}">Satellion</a> tool.</p>
+      <p class="fine-print">© {{copyright_year}} <a href="https://sebastienrousseau.com/" rel="author">Sebastien Rousseau</a>. {{footer_license}} Part of <a href="{{site_path}}">Satellion</a>.</p>
       <p class="fine-print footer-credit">Made with ❤️ in London. Built with <a class="made-with-ssg" href="https://static-site-generator.com/">SSG</a> and <a href="https://skeletonic.com/">Skeletonic CSS</a>.</p>
     </div>
   </div>

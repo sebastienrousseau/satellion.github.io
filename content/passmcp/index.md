@@ -20,6 +20,8 @@ theme_style: "style-passmcp"
 theme-color: "#F9A12C"
 brand_mark: "P"
 footer_note: "A verdict is worth what its evidence is worth."
+footer_repo: "passmcp"
+footer_license: "passmcp is released under GPL-3.0-only."
 
 eyebrow: "Open source · runs on your machine or in CI · no telemetry"
 headline: "Prove an MCP server is safe for your agents, with evidence anyone can check."

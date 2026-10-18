@@ -25,6 +25,8 @@ security_languages: "en"
 theme_style: "style-satellion"
 theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
+footer_repo: "satellion.github.io"
+footer_license: "This site is released under GPL-3.0-only, and the layouts it vendors from the SSG theme suite under MIT."
 
 eyebrow: "Open source · runs where your credentials already are · no telemetry"
 headline: "Evidence you can check, for the servers your agents trust."

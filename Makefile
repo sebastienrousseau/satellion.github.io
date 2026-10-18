@@ -207,6 +207,9 @@ core:
 	# Every page carries the site's one Content-Security-Policy and needs
 	# nothing it blocks: no inline script or style, nothing off-site.
 	python3 scripts/strict_csp.py $(DIST)
+	# Every footer links the source and security policy of the repository
+	# its page is about.
+	python3 scripts/footer_links.py $(DIST)
 	echo satellion.com > $(DIST)/CNAME
 	@echo "core: built $(DIST)"
 
