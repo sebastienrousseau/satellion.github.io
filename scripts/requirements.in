@@ -2,11 +2,13 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
 # The tools the site's own gates need beyond the standard library:
-# coverage.py for the coverage gate and the README's coverage badge, and
+# coverage.py for the coverage gate and the README's coverage badge,
 # xenon and complexipy for the complexity ceilings (cyclomatic 10,
-# cognitive 15).
+# cognitive 15), and ruff for lint and format (ruff.toml).
 # Regenerate the hash-locked scripts/requirements.txt with:
 #   uv pip compile --generate-hashes --python-version 3.12 --universal scripts/requirements.in -o scripts/requirements.txt
+# and put the two SPDX lines back at its top, which uv drops.
 coverage
 xenon
 complexipy
+ruff

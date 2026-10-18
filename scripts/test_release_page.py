@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-only
 """Tests for release_page.py. Run: python3 -m unittest discover -s scripts"""
+
 import io
 import os
 import shutil
@@ -8,8 +9,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
-import unittest.mock as mock
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).parent))
 import release_page
@@ -148,8 +149,12 @@ class ReleasePage(unittest.TestCase):
     def test_notes_with_only_the_changelog_line_leave_no_empty_section(self):
         fake = FakeGH(generated="**Full Changelog**: https://github.com/o/r/commits/v0.0.2\r\n")
         _, out, _ = self.page(fake, "v0.0.2")
-        want = ("## Highlights ⭐️\n\n* **One thing**: It changed for the user.\n* **Another thing**: So did this.\n\n"
-                "## Checksums\n\n" + release_page.NO_ASSETS + "\n\n**Full Changelog**: https://github.com/o/r/commits/v0.0.2\n")
+        want = (
+            "## Highlights ⭐️\n\n* **One thing**: It changed for the user.\n* **Another thing**: So did this.\n\n"
+            "## Checksums\n\n"
+            + release_page.NO_ASSETS
+            + "\n\n**Full Changelog**: https://github.com/o/r/commits/v0.0.2\n"
+        )
         self.assertEqual(out, want)
 
     def test_publish_edits_the_release_and_reads_it_back(self):

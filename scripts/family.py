@@ -18,6 +18,7 @@ are read as the same statuses and its repository taken to be its name.
 With --check, nothing is written: the script fails when <family.html>
 differs from what the manifest renders.
 """
+
 import html
 import json
 import re
@@ -39,31 +40,35 @@ STATUSES = {
 SCHEMA_1_REPOSITORIES = {"satellion.com": "satellion.github.io"}
 # What GitHub allows in a repository name.
 REPOSITORY = re.compile(r"[A-Za-z0-9._-]+")
-NUMBERS = "zero one two three four five six seven eight nine ten eleven twelve".split()
+NUMBERS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]
+
+
+class ManifestError(ValueError):
+    """The manifest cannot be read as the family table: wrong shape or value."""
 
 
 def text_field(entry, key, default=None):
-    """A string field of a manifest row, or a ValueError naming the row."""
+    """A string field of a manifest row, or a ManifestError naming the row."""
     value = entry.get(key, default)
     if not isinstance(value, str):
-        raise ValueError(f"{entry.get('name')!r}: {key} is not a string")
+        raise ManifestError(f"{entry.get('name')!r}: {key} is not a string")
     return value
 
 
 def row(entry):
     """One manifest row as the table needs it, whichever schema wrote it."""
     if not isinstance(entry, dict):
-        raise ValueError(f"a repositories entry is not an object: {entry!r}")
+        raise ManifestError(f"a repositories entry is not an object: {entry!r}")
     name = text_field(entry, "name")
     status = entry.get("status")
     status = STATUSES.get(status) if isinstance(status, str) else None
     if status is None:
-        raise ValueError(f"{name}: unknown status {entry.get('status')!r}")
+        raise ManifestError(f"{name}: unknown status {entry.get('status')!r}")
     repository = text_field(entry, "repository", "") or SCHEMA_1_REPOSITORIES.get(name, name)
     # The repository becomes part of an href: a GitHub repository name, and
     # nothing that could leave the attribute or the account's path.
     if not REPOSITORY.fullmatch(repository) or repository in (".", ".."):
-        raise ValueError(f"{name}: repository {repository!r} is not a repository name")
+        raise ManifestError(f"{name}: repository {repository!r} is not a repository name")
     return {
         "name": name,
         "url": f"{REPO}/{repository}",
@@ -77,15 +82,15 @@ def load(text):
     try:
         manifest = json.loads(text)
     except RecursionError:
-        raise ValueError("the manifest is nested too deeply to read") from None
+        raise ManifestError("the manifest is nested too deeply to read") from None
     if not isinstance(manifest, dict):
-        raise ValueError("the manifest is not a JSON object")
+        raise ManifestError("the manifest is not a JSON object")
     schema = manifest.get("schema_version")
     if schema not in SCHEMAS:
-        raise ValueError(f"unsupported ecosystem.json schema_version {schema!r}; this reads {SCHEMAS}")
+        raise ManifestError(f"unsupported ecosystem.json schema_version {schema!r}; this reads {SCHEMAS}")
     repositories = manifest.get("repositories")
     if not isinstance(repositories, list):
-        raise ValueError("the manifest has no repositories list")
+        raise ManifestError("the manifest has no repositories list")
     return schema, [row(e) for e in repositories]
 
 
@@ -105,17 +110,19 @@ def table(label, caption, head, rows):
     # ssg-table-scroll is SSG's own wrapper class: a page that carries it is
     # left alone, so SSG does not nest a second region labelled "Table,
     # scrollable horizontally" inside this one.
-    return "\n".join([
-        f'  <div class="container"><div class="table-scroll ssg-table-scroll" role="region" aria-label="{label}, scrollable horizontally" tabindex="0">',
-        "    <table>",
-        f'      <caption class="visually-hidden">{caption}</caption>',
-        f'      <thead><tr><th scope="col">Component</th><th scope="col">Purpose</th><th scope="col">{head}</th></tr></thead>',
-        "      <tbody>",
-        *rows,
-        "      </tbody>",
-        "    </table>",
-        "  </div></div>",
-    ])
+    return "\n".join(
+        [
+            f'  <div class="container"><div class="table-scroll ssg-table-scroll" role="region" aria-label="{label}, scrollable horizontally" tabindex="0">',
+            "    <table>",
+            f'      <caption class="visually-hidden">{caption}</caption>',
+            f'      <thead><tr><th scope="col">Component</th><th scope="col">Purpose</th><th scope="col">{head}</th></tr></thead>',
+            "      <tbody>",
+            *rows,
+            "      </tbody>",
+            "    </table>",
+            "  </div></div>",
+        ]
+    )
 
 
 def render(schema, rows, version):
@@ -127,8 +134,12 @@ def render(schema, rows, version):
         f"     {version}. Do not edit: run make family. -->",
         '<section class="section section-soft" id="ecosystem" aria-labelledby="ecosystem-heading">',
         f'  <div class="container split-heading"><div><p class="eyebrow">The passmcp family</p><h2 id="ecosystem-heading">{count} components, one version.</h2></div><p class="lead">The family moves in lockstep: one version across every component, released together. Each status links to its release, or to the changelog that tracks what is not released yet.</p></div>',
-        table("The passmcp family", "The components of the passmcp family, what each is for, and its release status",
-              "Status", [component_row(r, version) for r in built]),
+        table(
+            "The passmcp family",
+            "The components of the passmcp family, what each is for, and its release status",
+            "Status",
+            [component_row(r, version) for r in built],
+        ),
     ]
     # Rejected components are recorded in passmcp's docs/ecosystem.md; the
     # site lists only what the family is.

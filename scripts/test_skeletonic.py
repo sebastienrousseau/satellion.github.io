@@ -10,6 +10,7 @@ its tokens. A copy edited by hand, or a shell that drops or reorders it,
 fails here.
 Run: python3 -m unittest discover -s scripts
 """
+
 import hashlib
 import re
 import unittest

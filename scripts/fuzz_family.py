@@ -14,6 +14,7 @@ Anything else, a crash or markup the manifest put there, is a finding.
 Atheris ships wheels for Linux on x86-64 only, so CI runs the fuzzer;
 test_fuzz_family.py runs the same check over the seeds anywhere.
 """
+
 import html.parser
 import sys
 from pathlib import Path
@@ -38,12 +39,16 @@ ALLOWED = {
 }
 
 SEEDS = [
-    b'{"schema_version": 2, "repositories": [{"name": "passmcp", "repository": "passmcp",'
-    b' "status": "released", "role": "The engine."}, {"name": "passmcp-lsp", "status":'
-    b' "unreleased", "role": "A <b>language</b> server & more."}, {"name": "w",'
-    b' "status": "rejected"}]}',
-    b'{"schema_version": 1, "repositories": [{"name": "satellion.com", "status": "shipping",'
-    b' "role": "The site."}, {"name": "x", "status": "planned"}]}',
+    (
+        b'{"schema_version": 2, "repositories": [{"name": "passmcp", "repository": "passmcp",'
+        b' "status": "released", "role": "The engine."}, {"name": "passmcp-lsp", "status":'
+        b' "unreleased", "role": "A <b>language</b> server & more."}, {"name": "w",'
+        b' "status": "rejected"}]}'
+    ),
+    (
+        b'{"schema_version": 1, "repositories": [{"name": "satellion.com", "status": "shipping",'
+        b' "role": "The site."}, {"name": "x", "status": "planned"}]}'
+    ),
 ]
 
 

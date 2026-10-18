@@ -20,6 +20,7 @@ published page is read back, and the script fails unless GitHub shows what
 it composed. GitHub's generated notes need a gh token with contents access
 even for a dry run.
 """
+
 import argparse
 import hashlib
 import os
@@ -50,10 +51,10 @@ def gh(*args):
 
 def highlights(text):
     """The highlights file from its heading on, without trailing blanks."""
-    m = re.search(r"^" + re.escape(HEADING) + r"$", text, re.M)
+    m = re.search(r"^" + re.escape(HEADING) + r"$", text, re.MULTILINE)
     if not m:
         raise Failure(f"the highlights file has no '{HEADING}' heading")
-    return text[m.start():].strip()
+    return text[m.start() :].strip()
 
 
 def split_generated(text):

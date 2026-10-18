@@ -7,7 +7,7 @@
 # release: the sample report is passmcp run against its fixture server, the
 # manual is passmcp's docs/, and the page's numbers come from that report.
 
-.PHONY: all core site passmcp sample data check-data family check-family manual graph graph-demo graph-shot fuzz test coverage coverage-publish verify-versions readme-check lint complexity check serve clean help name-guard demo build
+.PHONY: all core site passmcp sample data check-data family check-family manual graph graph-demo graph-shot fuzz test coverage coverage-publish verify-versions readme-check lint ruff complexity check serve clean help name-guard demo build
 
 build: core
 
@@ -134,6 +134,12 @@ complexity: $(TESTENV)/.installed
 	$(TESTENV)/bin/xenon --max-absolute B --max-modules B --max-average A scripts
 	$(TESTENV)/bin/complexipy scripts --max-complexity-allowed 15 --quiet
 
+# ruff over the build's scripts: its lint rules and its formatter
+# (ruff.toml), at the version scripts/requirements.txt locks.
+ruff: $(TESTENV)/.installed
+	$(TESTENV)/bin/ruff check scripts
+	$(TESTENV)/bin/ruff format --check scripts
+
 # Every version reference names the newest CHANGELOG release.
 verify-versions:
 	scripts/verify-release-versions.sh
@@ -147,7 +153,7 @@ lint: readme-check name-guard
 	npx --yes markdownlint-cli2@0.18.1
 
 # Everything CI checks that needs no passmcp release.
-check: lint complexity verify-versions coverage core
+check: lint ruff complexity verify-versions coverage core
 
 manual: passmcp
 	python3 -m venv $(WORK)/venv

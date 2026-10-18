@@ -11,6 +11,7 @@ they find as warnings and carries on, so a regression reaches the deployed
 site unless something reads them. This does: every pillar must pass and
 neither report may list an issue.
 """
+
 import json
 import sys
 from pathlib import Path

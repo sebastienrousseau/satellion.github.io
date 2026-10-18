@@ -48,6 +48,9 @@ jobs:
       - name: Coverage meets the gate
         run: make coverage
 
+      - name: ruff lint and format are clean
+        run: make ruff
+
       - name: Complexity stays under the ceilings
         run: make complexity
 

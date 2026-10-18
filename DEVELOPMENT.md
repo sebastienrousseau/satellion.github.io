@@ -24,8 +24,8 @@ Install SSG with Cargo:
 cargo install ssg --locked --version 0.0.68
 ```
 
-`make coverage` and `make complexity` create `.build/venv-test` and install
-coverage.py, xenon and complexipy from the hash-locked
+`make coverage`, `make complexity` and `make ruff` create `.build/venv-test` and install
+coverage.py, xenon, complexipy and ruff from the hash-locked
 `scripts/requirements.txt`; nothing is installed globally.
 
 ## Gates
@@ -38,6 +38,7 @@ CI job; the command reproduces it locally.
 | The scripts' tests | `make test` | `ci.yml`, `pages.yml` |
 | Coverage at 85% or more | `make coverage` | `ci.yml`, `pages.yml` |
 | Complexity: cyclomatic 10, cognitive 15 per function | `make complexity` | `ci.yml` |
+| ruff lint and format (`ruff.toml`) | `make ruff` | `ci.yml` |
 | Every version reference agrees, the SSG pin included | `make verify-versions` | `ci.yml` |
 | The core pages build | `make core` | `ci.yml`, `pages.yml` |
 | SSG's quality gate passes every pillar, and its accessibility report is empty | `make core` (runs `scripts/quality_gate.py dist`) | `ci.yml`, `pages.yml` |

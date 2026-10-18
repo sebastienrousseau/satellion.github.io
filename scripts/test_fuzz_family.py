@@ -6,6 +6,7 @@ The fuzzer itself needs Atheris, which runs in CI on Linux; these tests run
 the same check anywhere, so the harness cannot rot between fuzz runs.
 Run: python3 -m unittest discover -s scripts
 """
+
 import sys
 import tempfile
 import unittest
@@ -25,23 +26,30 @@ class Check(unittest.TestCase):
                 self.assertEqual(fuzz_family.problems(family.render(*family.load(s.decode()), "0.0.8")), [])
 
     def test_refused_and_undecodable_input_is_not_a_finding(self):
-        for data in [b"\xff\xfe", b"", b"[]", b"{", b"[" * 100_000,
-                     b'{"schema_version": 2, "repositories": [{"name": "x", "repository": "a\\" b",'
-                     b' "status": "released"}]}']:
+        for data in [
+            b"\xff\xfe",
+            b"",
+            b"[]",
+            b"{",
+            b"[" * 100_000,
+            (b'{"schema_version": 2, "repositories": [{"name": "x", "repository": "a\\" b", "status": "released"}]}'),
+        ]:
             with self.subTest(data=data[:40]):
                 fuzz_family.check(data)
 
     def test_markup_the_table_never_writes_is_a_finding(self):
-        self.assertEqual(fuzz_family.problems('<a href="https://example.com/">x</a>'),
-                         ["href 'https://example.com/'"])
-        self.assertEqual(fuzz_family.problems(f'<a href="{family.REPO}/x" onmouseover="y">x</a>'),
-                         ["<a ['href', 'onmouseover']>"])
+        self.assertEqual(fuzz_family.problems('<a href="https://example.com/">x</a>'), ["href 'https://example.com/'"])
+        self.assertEqual(
+            fuzz_family.problems(f'<a href="{family.REPO}/x" onmouseover="y">x</a>'), ["<a ['href', 'onmouseover']>"]
+        )
         self.assertEqual(fuzz_family.problems("<script>x</script>"), ["<script []>"])
 
     def test_a_render_that_lets_markup_through_fails_the_check(self):
         leaky = '<a href="https://example.com/" rel="noopener">x</a>'
-        with mock.patch.object(family, "render", return_value=leaky), \
-                self.assertRaisesRegex(AssertionError, "never writes"):
+        with (
+            mock.patch.object(family, "render", return_value=leaky),
+            self.assertRaisesRegex(AssertionError, "never writes"),
+        ):
             fuzz_family.check(fuzz_family.SEEDS[0])
 
     def test_seeds_fill_only_an_empty_corpus(self):
@@ -54,8 +62,7 @@ class Check(unittest.TestCase):
             self.assertEqual((corpus / "seed-0.json").read_bytes(), b"found")
 
     def test_main_without_a_corpus_prints_the_usage(self):
-        with mock.patch.dict(sys.modules, {"atheris": mock.MagicMock()}), \
-                self.assertRaisesRegex(SystemExit, "usage"):
+        with mock.patch.dict(sys.modules, {"atheris": mock.MagicMock()}), self.assertRaisesRegex(SystemExit, "usage"):
             fuzz_family.main(["fuzz_family.py"])
 
     def test_main_seeds_the_corpus_and_runs_atheris(self):

@@ -12,6 +12,7 @@ The same rules are passmcp's `cra.CheckSecurityTxt` (EU Cyber Resilience Act,
 CRA-05); this copy exists because the site builds against passmcp's last
 release, which may predate them.
 """
+
 import datetime
 import sys
 from pathlib import Path
@@ -36,7 +37,7 @@ def expiry_problem(expires, now):
     if len(expires) != 1:
         return f"security.txt must have exactly one Expires field, has {len(expires)}"
     try:
-        at = datetime.datetime.fromisoformat(expires[0].replace("Z", "+00:00"))
+        at = datetime.datetime.fromisoformat(expires[0])
     except ValueError:
         return f"security.txt Expires is not an RFC 3339 date: {expires[0]}"
     if at.tzinfo is None:
@@ -61,7 +62,7 @@ def problems(text, now):
 def main(argv):
     if len(argv) != 2:
         sys.exit(__doc__)
-    found = problems(Path(argv[1]).read_text(), datetime.datetime.now(datetime.timezone.utc))
+    found = problems(Path(argv[1]).read_text(), datetime.datetime.now(datetime.UTC))
     for p in found:
         print(f"security_txt: {p}", file=sys.stderr)
     if found:
