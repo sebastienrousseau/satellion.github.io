@@ -48,7 +48,10 @@ Makefile      Every build and gate target
    the wrong `go-import` tag (ADR 0004).
 6. `scripts/quality_gate.py` fails the build unless SSG's
    `quality-gate-report.json` passes every pillar and its
-   `accessibility-report.json` lists no issue.
+   `accessibility-report.json` lists no issue, and `scripts/strict_csp.py`
+   fails it unless every page carries the policy in `_layouts/csp.html`
+   (the same as Cloudflare's header) and needs no inline script or style
+   and nothing from another origin.
 7. `CNAME` is written for GitHub Pages.
 
 `make site` (ADR 0001) adds, before `core`: a passmcp checkout at a release

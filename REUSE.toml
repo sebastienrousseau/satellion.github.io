@@ -24,6 +24,14 @@ precedence = "override"
 SPDX-FileCopyrightText = "2024 - 2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>"
 SPDX-License-Identifier = "MIT"
 
+# The site's one Content-Security-Policy, written for this site, not
+# vendored: GPL-3.0-only like the rest of the repository.
+[[annotations]]
+path = ["_layouts/csp.html"]
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Sebastien Rousseau <sebastian.rousseau@gmail.com>"
+SPDX-License-Identifier = "GPL-3.0-only"
+
 # passmcp's icons, copied from passmcp's brand/ at the release the site is
 # built against, under passmcp's licence.
 [[annotations]]

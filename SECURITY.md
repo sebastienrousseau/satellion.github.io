@@ -5,7 +5,10 @@
 
 This repository builds the static site at <https://satellion.com/>. It serves
 no application and holds no credentials: every page is a static file, and
-the site sets no cookies and runs no analytics.
+the site sets no cookies and runs no analytics. Every page's
+Content-Security-Policy (`_layouts/csp.html`) allows scripts and
+connections to the site's own origin only, so it also blocks an
+analytics beacon an edge proxy injects.
 
 ## Reporting a vulnerability
 

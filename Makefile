@@ -7,7 +7,7 @@
 # release: the sample report is passmcp run against its fixture server, the
 # manual is passmcp's docs/, and the page's numbers come from that report.
 
-.PHONY: all core site passmcp sample data check-data family check-family manual graph graph-demo graph-shot fuzz test coverage coverage-publish verify-versions readme-check lint ruff complexity check serve clean help name-guard demo build
+.PHONY: all core site passmcp sample data check-data check-sample-csp family check-family manual graph graph-demo graph-shot fuzz test coverage coverage-publish verify-versions readme-check lint ruff complexity check serve clean help name-guard demo build
 
 build: core
 
@@ -41,6 +41,21 @@ passmcp:
 sample: passmcp
 	rm -rf $(WORK)/sample
 	cd $(WORK)/passmcp && go run ./scripts/samplereport/main.go ../passmcp-bin ../sample
+
+# The sample report is served under the site's Content-Security-Policy
+# header, which blocks inline style and script. passmcp's own generator
+# writes it, so the site checks it rather than rewrite it: from the passmcp
+# release SAMPLE_CSP_FROM on, a sample report that needs anything the
+# header blocks fails the build. Releases before it inline their styles,
+# and are let through with a note. SAMPLE_CSP_FROM names the first release
+# expected to carry passmcp's fix; move it if that fix ships later.
+SAMPLE_CSP_FROM ?= 0.0.8
+check-sample-csp: sample
+	@if [ "$$(printf '%s\n' "$(SAMPLE_CSP_FROM)" "$(PASSMCP_REF:v%=%)" | sort -V | head -n1)" = "$(SAMPLE_CSP_FROM)" ]; then \
+	  python3 scripts/strict_csp.py --header-only $(WORK)/sample; \
+	else \
+	  echo "check-sample-csp: passmcp $(PASSMCP_REF) is before $(SAMPLE_CSP_FROM); its sample report is not held to the policy yet"; \
+	fi
 
 # The page's score, grade, counts and ledger, from that report.
 data: sample
@@ -189,12 +204,15 @@ core:
 	# SSG audits every build (ten quality pillars, WCAG 2.2 per page) but
 	# only logs what it finds; the build fails on any finding instead.
 	python3 scripts/quality_gate.py $(DIST)
+	# Every page carries the site's one Content-Security-Policy and needs
+	# nothing it blocks: no inline script or style, nothing off-site.
+	python3 scripts/strict_csp.py $(DIST)
 	echo satellion.com > $(DIST)/CNAME
 	@echo "core: built $(DIST)"
 
 # site is core plus what comes from the passmcp release: the numbers on the
 # product page, the family table, the manual and the sample report.
-site: data family manual core
+site: data family manual check-sample-csp core
 	cp -R $(WORK)/manual $(DIST)/passmcp/docs
 	cp -R $(WORK)/sample $(DIST)/passmcp/sample
 	# Last, because it indexes the finished tree.
