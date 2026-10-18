@@ -41,7 +41,7 @@ CI job; the command reproduces it locally.
 | ruff lint and format (`ruff.toml`) | `make ruff` | `ci.yml` |
 | Every version reference agrees, the SSG pin included | `make verify-versions` | `ci.yml` |
 | The core pages build | `make core` | `ci.yml`, `pages.yml` |
-| SSG's quality gate passes every pillar, and its accessibility report is empty | `make core` (runs `scripts/quality_gate.py dist`) | `ci.yml`, `pages.yml` |
+| SSG's quality gate passes every pillar, its accessibility report is empty and `manifest.json` has no null field | `make core` (runs `scripts/quality_gate.py dist`) | `ci.yml`, `pages.yml` |
 | The full site builds against a passmcp release | `make site` | `pages.yml` |
 | The product page's numbers match the release | `make check-data` | `pages.yml` on pull requests |
 | The family table matches the release's `ecosystem.json` | `make check-family` | `pages.yml` on pull requests |

@@ -13,7 +13,7 @@ changefreq: "monthly"
 copyright_year: "2026"
 form_origin: "'self'"
 theme_style: "style-satellion"
-theme_colour: "#214186"
+theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
 # Go resolves the module path satellion.com/passmcp-reporting from these two tags.
 go_import: "satellion.com/passmcp-reporting git https://github.com/sebastienrousseau/passmcp-reporting"

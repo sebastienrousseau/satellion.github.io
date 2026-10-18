@@ -13,7 +13,7 @@ changefreq: "monthly"
 copyright_year: "2026"
 form_origin: "'self'"
 theme_style: "style-satellion"
-theme_colour: "#214186"
+theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
 # A nested module of passmcp-reporting: Go fetches this path, maps it to the
 # repository root below, and reads the tags prefixed

@@ -21,10 +21,13 @@ CLEAN_QUALITY = {
     "pillars": {"1. Output": {"pass": True, "issues": []}, "6. Navbar": {"pass": True, "issues": []}},
 }
 CLEAN_A11Y = {"pages_scanned": 3, "total_issues": 0, "wcag_version": "2.2", "pages": []}
+CLEAN_MANIFEST = {"name": "Satellion", "short_name": "Satellion", "theme_color": "#214186"}
 
 
-def site(quality=CLEAN_QUALITY, a11y=CLEAN_A11Y):
+def site(quality=CLEAN_QUALITY, a11y=CLEAN_A11Y, manifest=CLEAN_MANIFEST):
     d = tempfile.mkdtemp()
+    if manifest is not None:
+        (Path(d) / quality_gate.MANIFEST).write_text(json.dumps(manifest))
     if quality is not None:
         (Path(d) / quality_gate.QUALITY).write_text(json.dumps(quality))
     if a11y is not None:
@@ -64,9 +67,19 @@ class QualityGate(unittest.TestCase):
             ["accessibility: index.html: [1.1.1] <img> missing alt text: /a.svg"],
         )
 
+    def test_a_null_manifest_field_fails(self):
+        manifest = {**CLEAN_MANIFEST, "short_name": None, "theme_color": None}
+        self.assertEqual(
+            quality_gate.problems(site(manifest=manifest)),
+            [
+                "manifest.json: short_name is null; set it in front matter",
+                "manifest.json: theme_color is null; set it in front matter",
+            ],
+        )
+
     def test_a_missing_report_fails(self):
-        found = quality_gate.problems(site(quality=None, a11y=None))
-        self.assertEqual(len(found), 2)
+        found = quality_gate.problems(site(quality=None, a11y=None, manifest=None))
+        self.assertEqual(len(found), 3)
         self.assertTrue(all("missing" in f for f in found))
 
     def test_main_passes_clean_and_exits_with_the_findings(self):

@@ -24,7 +24,7 @@ security_policy: "https://github.com/sebastienrousseau/passmcp/security/policy"
 security_canonical: "https://satellion.com/.well-known/security.txt"
 security_languages: "en"
 theme_style: "style-satellion"
-theme_colour: "#214186"
+theme-color: "#214186"
 footer_note: "Evidence you can check, not claims you have to trust."
 
 eyebrow: "Open source · runs where your credentials already are · no telemetry"
