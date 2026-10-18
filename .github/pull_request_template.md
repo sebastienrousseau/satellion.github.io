@@ -18,6 +18,7 @@ by passmcp's source, its output, or a cited public source.
 ## How it was verified
 
 - [ ] `make check` passes
+- [ ] New or changed behaviour has a test in `scripts/test_<name>.py` that fails without it, and `make coverage` stays at 85% or more
 - [ ] A new or changed claim links its evidence
 - [ ] A new Go module page is listed in `scripts/modules.py`
 - [ ] `CHANGELOG.md` has an entry under the version being prepared

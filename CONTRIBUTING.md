@@ -23,6 +23,14 @@ make serve     # then open http://localhost:8000
 ```
 
 [DEVELOPMENT.md](DEVELOPMENT.md) maps every CI gate to its local command.
+
+## Tests
+
+New or changed behaviour in the build's scripts comes with a test that
+fails without it, in `scripts/test_<name>.py` beside the script, run by
+`make test`. Check that it fails before the change and passes after.
+`make coverage` holds statements and branches together at 85% or more, so
+an untested branch shows up there.
 Add an entry to [CHANGELOG.md](CHANGELOG.md) under the version being prepared.
 
 ## Commits
