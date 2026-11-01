@@ -101,7 +101,7 @@ graph_alt: "passmcp-graph's command centre: two configured clients joined to fou
 graph_caption: "passmcp-graph's published fixture graph, rendered share-safe by passmcp-graph dashboard from"
 graph_cta: "Open the live demo"
 graph_cta_secondary: "passmcp-graph on GitHub"
-graph_version: "0.0.7"
+graph_version: "0.0.8"
 
 trust_eyebrow: "Trust"
 trust_title: "Auditable the way it asks servers to be."
@@ -193,7 +193,7 @@ evidence_2_req: "req#12"
 evidence_2_id: "protocol.unknown_tool"
 evidence_2_title: "Unknown tool is reported"
 evidence_2_detail: "calling a non-existent tool returned success"
-readout_version: "0.0.7"
+readout_version: "0.0.8"
 ---
 
 ## Install
@@ -201,7 +201,7 @@ readout_version: "0.0.7"
 ```sh
 brew install sebastienrousseau/tap/passmcp     # macOS and Linux
 mise use -g github:sebastienrousseau/passmcp   # with mise
-go install satellion.com/passmcp/cmd/passmcp@v0.0.7
+go install satellion.com/passmcp/cmd/passmcp@v0.0.8
 ```
 
 Then point it at a server:
