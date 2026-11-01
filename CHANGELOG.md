@@ -7,6 +7,26 @@ All notable changes to satellion.com are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions move by
 0.0.1 a release, as across the passmcp family.
 
+## [Unreleased]
+
+Work towards the family's 0.0.9. Version places stay at 0.0.8 until the
+family's release step.
+
+### Security
+
+- **certifi is held at 2026.10.18 or later.** `scripts/requirements.in`
+  sets a floor on certifi, which requests pulls in, so no release that
+  GHSA-6q48-6c7w-9gw2 (PYSEC-2026-4320) affects can resolve. The
+  hash-locked `scripts/requirements.txt` moves from 2026.7.22 to
+  2026.10.23, and `pip-audit` finds nothing in either lock. Supersedes
+  Dependabot's #13.
+
+### Fixed
+
+- **`scripts/test_release_page.py` imports `unittest` one way.** It took
+  both `import unittest` and `from unittest import mock`, which CodeQL
+  flags; it now uses `unittest.mock` throughout.
+
 ## [0.0.8] - 2026-10-31
 
 ### Added

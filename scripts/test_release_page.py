@@ -9,8 +9,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
-from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).parent))
 import release_page
@@ -109,10 +109,10 @@ class ReleasePage(unittest.TestCase):
         self.dir = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.dir)
         (self.dir / "v0.0.2.md").write_text(HIGHLIGHTS)
-        patcher = mock.patch.object(release_page, "RELEASES", self.dir)
+        patcher = unittest.mock.patch.object(release_page, "RELEASES", self.dir)
         patcher.start()
         self.addCleanup(patcher.stop)
-        env = mock.patch.dict(os.environ, {"GITHUB_REPOSITORY": "o/r"})
+        env = unittest.mock.patch.dict(os.environ, {"GITHUB_REPOSITORY": "o/r"})
         env.start()
         self.addCleanup(env.stop)
 
@@ -201,19 +201,19 @@ class ReleasePage(unittest.TestCase):
             self.assertIn(want, err)
 
     def test_a_tag_that_is_not_vxyz_is_a_usage_error(self):
-        with self.assertRaises(SystemExit) as e, mock.patch("sys.stderr", io.StringIO()):
+        with self.assertRaises(SystemExit) as e, unittest.mock.patch("sys.stderr", io.StringIO()):
             release_page.main(["0.0.2"], run=FakeGH())
         self.assertEqual(e.exception.code, 2)
 
     def test_without_a_repository_gh_infers_it(self):
-        with mock.patch.dict(os.environ, {"GITHUB_REPOSITORY": ""}):
+        with unittest.mock.patch.dict(os.environ, {"GITHUB_REPOSITORY": ""}):
             fake = FakeGH()
             self.page(fake, "v0.0.2")
         self.assertIn("repos/{owner}/{repo}/releases/generate-notes", fake.called("api")[0])
         self.assertFalse(any("-R" in c for c in fake.calls))
 
     def test_gh_runs_the_real_command(self):
-        with mock.patch.object(subprocess, "run") as run:
+        with unittest.mock.patch.object(subprocess, "run") as run:
             run.return_value = subprocess.CompletedProcess([], 0, stdout="ok")
             self.assertEqual(release_page.gh("version"), "ok")
             run.return_value = subprocess.CompletedProcess([], 1, stdout="")

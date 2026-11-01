@@ -12,3 +12,6 @@ coverage
 xenon
 complexipy
 ruff
+# Not a direct need: requests pulls it in. The floor keeps every release
+# GHSA-6q48-6c7w-9gw2 (PYSEC-2026-4320) affects out of the lock.
+certifi>=2026.10.18
