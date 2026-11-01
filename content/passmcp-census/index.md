@@ -25,7 +25,7 @@ lead: "The passmcp reliability census: aggregate figures about the MCP Registry'
 ---
 
 ```sh
-go install satellion.com/passmcp-census/cmd/passmcp-census@v0.0.7
+go install satellion.com/passmcp-census/cmd/passmcp-census@v0.0.8
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-census](https://github.com/sebastienrousseau/passmcp-census)

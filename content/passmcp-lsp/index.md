@@ -25,7 +25,7 @@ lead: "A language server for MCP artefacts: it checks server.json, MCP client co
 ---
 
 ```sh
-go install satellion.com/passmcp-lsp/cmd/passmcp-lsp@v0.0.7
+go install satellion.com/passmcp-lsp/cmd/passmcp-lsp@v0.0.8
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-lsp](https://github.com/sebastienrousseau/passmcp-lsp)

@@ -59,7 +59,7 @@ jobs:
           fi
           missing=()
           for sha in ${commits}; do
-            if ! git show -s --format=%B "${sha}" | grep -qi '^Signed-off-by: .* <.*>$'; then
+            if ! git show -s --format=%B "${sha}" | grep -qiE '^(Signed-off-by: .* <.*>|Assisted-by: .+)$'; then
               missing+=("${sha}")
             fi
           done

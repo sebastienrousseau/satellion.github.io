@@ -25,7 +25,7 @@ lead: "The attestation format passmcp writes about MCP servers and A2A agents, i
 ---
 
 ```sh
-go get satellion.com/passmcp-reporting@v0.0.7
+go get satellion.com/passmcp-reporting@v0.0.8
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-reporting](https://github.com/sebastienrousseau/passmcp-reporting)
