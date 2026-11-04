@@ -12,10 +12,10 @@
 build: core
 
 PASSMCP_REPO ?= https://github.com/sebastienrousseau/passmcp
-# The latest release tag unless one is named: make site PASSMCP_REF=v0.0.7
+# The latest release tag unless one is named: make site PASSMCP_REF=v0.0.8
 PASSMCP_REF  ?= $(shell git ls-remote --tags --refs --sort=-v:refname $(PASSMCP_REPO) 'v*' | head -n1 | sed 's|.*refs/tags/||')
 PASSMCP_GRAPH_REPO ?= https://github.com/sebastienrousseau/passmcp-graph
-# The latest release tag unless one is named: make site PASSMCP_GRAPH_REF=v0.0.7
+# The latest release tag unless one is named: make site PASSMCP_GRAPH_REF=v0.0.8
 PASSMCP_GRAPH_REF  ?= $(shell git ls-remote --tags --refs --sort=-v:refname $(PASSMCP_GRAPH_REPO) 'v*' | head -n1 | sed 's|.*refs/tags/||')
 SSG_VERSION ?= 0.0.68
 # Every SSG build refuses any other version.
