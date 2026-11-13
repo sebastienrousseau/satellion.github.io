@@ -7,10 +7,19 @@ All notable changes to satellion.com are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions move by
 0.0.1 a release, as across the passmcp family.
 
-## [Unreleased]
+## [0.0.9] - 2026-11-12
 
-Work towards the family's 0.0.9. Version places stay at 0.0.8 until the
-family's release step.
+0.0.8 was merged on `main` without a release tag; its changes ship alongside
+0.0.9 at the family's version.
+
+### Changed
+
+- **Built against passmcp 0.0.9.** The check count (139 checks in nine
+  phases), sample report readout and family table come from the 0.0.9
+  release, and every `go install` and `go get` line on the Go module
+  pages pins 0.0.9.
+- **CI**: `DavidAnson/markdownlint-cli2-action` 25.0.0 (#16) and
+  `github/codeql-action` 4.39.3 (#17).
 
 ### Security
 
