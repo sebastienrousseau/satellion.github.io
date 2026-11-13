@@ -93,7 +93,7 @@ make serve    # then open http://localhost:8000
 
 ## The satellion.com ecosystem
 
-Every component is released at **0.0.9** and moves in lockstep: one version across the family, released together ([docs/ecosystem.md](https://github.com/sebastienrousseau/passmcp/blob/main/docs/ecosystem.md)).
+Every component is released at **0.0.10** and moves in lockstep: one version across the family, released together ([docs/ecosystem.md](https://github.com/sebastienrousseau/passmcp/blob/main/docs/ecosystem.md)).
 
 | Component | Purpose | Use case |
 | :--- | :--- | :--- |
@@ -102,10 +102,16 @@ Every component is released at **0.0.9** and moves in lockstep: one version acro
 | [passmcp-server](https://github.com/sebastienrousseau/passmcp-server) | passmcp's diagnostics as read-only MCP tools | Evaluate a server, or check an attestation, from inside the agent |
 | [passmcp-action](https://github.com/sebastienrousseau/passmcp-action) | passmcp in GitHub Actions and GitLab CI, the image pinned by digest | Fail a build on the findings you choose |
 | [passmcp-graph](https://github.com/sebastienrousseau/passmcp-graph) | A local graph of agents, servers, tools and identities built from attestations | Find inherited risk and over-privilege, and gate on policy |
-| [passmcp-registry](https://github.com/sebastienrousseau/passmcp-registry) | A signed public scorecard of the MCP Registry's remote servers | Check a public server's standing before connecting to it |
+| [passmcp-registry](https://github.com/sebastienrousseau/passmcp-registry) | A signed public scorecard of the MCP Registry's remote servers (no run published yet) | Check a public server's standing before connecting to it |
 | [passmcp-lsp](https://github.com/sebastienrousseau/passmcp-lsp) | A language server for MCP artefacts, with check-id hover from the guidance catalogue | Catch mistakes in server.json, tool schemas and client configuration while editing |
-| [passmcp-census](https://github.com/sebastienrousseau/passmcp-census) | The published reliability census: dataset, methodology, disclosure log and reproduction command | Cite ecosystem-wide reliability figures, and reproduce them |
+| [passmcp-census](https://github.com/sebastienrousseau/passmcp-census) | The reliability census: methodology, disclosure log and reproduction command (no edition published yet) | Cite ecosystem-wide reliability figures, and reproduce them, once an edition is published |
 | [satellion.com](https://github.com/sebastienrousseau/satellion.github.io) | The website, the Go module paths and the format URIs | Read the manual, and resolve `satellion.com/...` imports |
+| [passmcp-sdk-go](https://github.com/sebastienrousseau/passmcp-sdk-go) | Apache-2.0 Go MCP client and server SDK with offline attestation verification (not yet released) | Build an MCP server or client in Go that clears passmcp's checks and verifies attestations offline |
+| [passmcp-sdk-python](https://github.com/sebastienrousseau/passmcp-sdk-python) | Apache-2.0 Python MCP client and server SDK with offline attestation verification (not yet released) | Build an MCP server or client in Python that clears passmcp's checks and verifies attestations offline |
+| [passmcp-sdk-java](https://github.com/sebastienrousseau/passmcp-sdk-java) | Apache-2.0 Java MCP client and server SDK with offline attestation verification (not yet released) | Build an MCP server or client in Java that clears passmcp's checks and verifies attestations offline |
+| [passmcp-sdk-cpp](https://github.com/sebastienrousseau/passmcp-sdk-cpp) | Apache-2.0 C++20 MCP client and server SDK with offline attestation verification (not yet released) | Build an MCP server or client in C++ that clears passmcp's checks and verifies attestations offline |
+| [passmcp-sdk-typescript](https://github.com/sebastienrousseau/passmcp-sdk-typescript) | Apache-2.0 TypeScript MCP client and server SDK with offline attestation verification (not yet released) | Build an MCP server or client in TypeScript that clears passmcp's checks and verifies attestations offline |
+| [passmcp-sdk-rust](https://github.com/sebastienrousseau/passmcp-sdk-rust) | Apache-2.0 Rust MCP client and server SDK with offline attestation verification (not yet released) | Build an MCP server or client in Rust that clears passmcp's checks and verifies attestations offline |
 
 ---
 
@@ -117,13 +123,14 @@ Every component is released at **0.0.9** and moves in lockstep: one version acro
 | Product page | passmcp's page at `/passmcp/`, from `content/passmcp/index.md` | [Released in 0.0.1](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.1) |
 | Go module pages | `satellion.com/passmcp`, `/passmcp-reporting` (and its nested agentgateway module), `/passmcp-server`, `/passmcp-graph` and `/passmcp-registry` resolve to their repositories | [Released in 0.0.1](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.1) |
 | Go module pages | `satellion.com/passmcp-lsp` and `satellion.com/passmcp-census` resolve to their repositories | [Released in 0.0.3](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.3) |
+| Go module pages | `satellion.com/passmcp-sdk-go` resolves to its repository | [Released in 0.0.10](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.10) |
 | Format pages | The attestation and graph format URIs resolve to their specifications | [Released in 0.0.1](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.1) |
 | Numbers | Score, grade, counts, ledger, phases and evidence from passmcp's sample report | [Released in 0.0.1](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.1) |
 | Manual | passmcp's `docs/`, built with MkDocs `--strict`, at `/passmcp/docs/` | [Released in 0.0.1](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.1) |
 | Sample | passmcp's real report against its fixture server, at `/passmcp/sample/` | [Released in 0.0.1](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.1) |
 | security.txt | RFC 9116 at `/.well-known/security.txt`, failing the build 30 days before it expires | [Released in 0.0.1](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.1) |
 | Social cards | Rendered from `cards/` by `scripts/cards.py` | [Released in 0.0.1](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.1) |
-| Family listing | All nine components with their release status, on the company and product pages, rendered from passmcp's `ecosystem.json` | [Released in 0.0.3](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.3) |
+| Family listing | All fifteen components with their release status, on the company and product pages, rendered from passmcp's `ecosystem.json` | [Released in 0.0.3](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.3) |
 | Coverage badge | `/coverage.json`, the scripts' coverage measured on every deploy | [Released in 0.0.3](https://github.com/sebastienrousseau/satellion.github.io/releases/tag/v0.0.3) |
 
 ---
@@ -171,7 +178,7 @@ Not applicable: the site is static. passmcp's benchmarks are in its
 ## Examples
 
 ```sh
-make site PASSMCP_REF=v0.0.9   # build against a specific release
+make site PASSMCP_REF=v0.0.10  # build against a specific release
 make data                      # rewrite the page's numbers from the sample report
 make check-data                # fail if they differ, as CI does on pull requests
 ```
@@ -235,7 +242,8 @@ These URLs are stable, because other systems resolve them: `/`,
 `/passmcp/`, `/passmcp/docs/`, `/passmcp/sample/`, the Go module paths
 (`/passmcp`, `/passmcp-reporting`,
 `/passmcp-reporting/integrations/agentgateway-extmcp`, `/passmcp-server`,
-`/passmcp-graph`, `/passmcp-registry`, `/passmcp-lsp`, `/passmcp-census`),
+`/passmcp-graph`, `/passmcp-registry`, `/passmcp-lsp`, `/passmcp-census`,
+`/passmcp-sdk-go`),
 and the format URIs (`/attestation/mcp-evaluation/v1`,
 `/attestation/a2a-evaluation/v1`, `/graph/v1`). Removing or moving one needs
 an ADR. Layout and copy change freely; numbers always come from a passmcp

@@ -52,8 +52,8 @@ class Modules(unittest.TestCase):
         found = "\n".join(modules.problems(site(pages)))
         self.assertIn(f"{nested}: /{nested}/ has no go-import tag for satellion.com/passmcp-reporting", found)
 
-    def test_the_language_server_and_the_census_have_module_pages(self):
-        for m in ("passmcp-lsp", "passmcp-census"):
+    def test_the_language_server_the_census_and_the_go_sdk_have_module_pages(self):
+        for m in ("passmcp-lsp", "passmcp-census", "passmcp-sdk-go"):
             self.assertIn(m, modules.ROOTS)
             front = (Path(__file__).parent.parent / "content" / m / "index.md").read_text()
             self.assertIn(f'go_source: "satellion.com/{m} {modules.REPO}/{m} ', front)

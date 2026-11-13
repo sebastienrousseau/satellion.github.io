@@ -42,8 +42,8 @@ def site_rows():
 
 
 class Family(unittest.TestCase):
-    def test_the_readme_lists_nine_components(self):
-        self.assertEqual(len(readme_components()), 9)
+    def test_the_readme_lists_fifteen_components(self):
+        self.assertEqual(len(readme_components()), 15)
 
     def test_the_site_lists_the_readmes_components_in_order_with_their_repositories(self):
         site = [(name, url) for url, name, _ in site_rows()]
