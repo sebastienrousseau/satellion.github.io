@@ -7,6 +7,24 @@ All notable changes to satellion.com are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions move by
 0.0.1 a release, as across the passmcp family.
 
+## [0.0.10] - 2026-11-13
+
+### Added
+
+- **Go module page for `satellion.com/passmcp-sdk-go`.** `/passmcp-sdk-go/`
+  publishes `go-import` and `go-source` metadata resolving
+  `satellion.com/passmcp-sdk-go` to its repository, checked on every build
+  by `scripts/modules.py` and `scripts/footer_links.py`.
+
+### Changed
+
+- **Built against passmcp 0.0.10.** The check count (139 checks in nine
+  phases), sample report readout and 15-component family table come from
+  the 0.0.10 release (adding `passmcp-sdk-go`, `passmcp-sdk-python`,
+  `passmcp-sdk-java`, `passmcp-sdk-cpp`, `passmcp-sdk-typescript` and
+  `passmcp-sdk-rust`), and every `go install` and `go get` line on the Go
+  module pages pins 0.0.10.
+
 ## [0.0.9] - 2026-11-12
 
 0.0.8 was merged on `main` without a release tag; its changes ship alongside

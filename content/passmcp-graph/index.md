@@ -25,7 +25,7 @@ lead: "A local graph of which agents use which MCP servers, which tools those se
 ---
 
 ```sh
-go install satellion.com/passmcp-graph/cmd/passmcp-graph@v0.0.9
+go install satellion.com/passmcp-graph/cmd/passmcp-graph@v0.0.10
 ```
 
 - Source: [github.com/sebastienrousseau/passmcp-graph](https://github.com/sebastienrousseau/passmcp-graph)

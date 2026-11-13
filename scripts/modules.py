@@ -24,6 +24,7 @@ ROOTS = [
     "passmcp-registry",
     "passmcp-lsp",
     "passmcp-census",
+    "passmcp-sdk-go",
 ]
 # A nested module (its own go.mod in a subdirectory) is fetched at its own
 # path, so it needs its own page. The tag on it names the repository root:
